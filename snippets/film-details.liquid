@@ -1,0 +1,32 @@
+{% if product.metafields.custom.format != blank or product.metafields.custom.condition != blank %}
+  <div class="film-details">
+    {% if product.metafields.custom.format != blank %}
+      <p class="film-details__item">
+        <span class="film-details__label">Format:</span>
+        {{ product.metafields.custom.format.value }}
+      </p>
+    {% endif %}
+
+    {% if product.metafields.custom.condition != blank %}
+      <p class="film-details__item">
+        <span class="film-details__label">Skick:</span>
+        {{ product.metafields.custom.condition.value }}
+      </p>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .film-details {
+    margin-block: 1rem;
+  }
+
+  .film-details__item {
+    margin-block: 0.35rem;
+    font-size: 0.95rem;
+  }
+
+  .film-details__label {
+    font-weight: 600;
+  }
+{% endstylesheet %}

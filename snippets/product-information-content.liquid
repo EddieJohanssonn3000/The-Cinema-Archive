@@ -121,6 +121,10 @@
   </product-component>
 
   {{ additional_blocks }}
+  {% if request.page_type == 'product' %}
+    {% render 'film-details', product: product %}
+  {% endif %}
+  
 </div>
 
 {% stylesheet %}
