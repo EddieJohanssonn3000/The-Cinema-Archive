@@ -1,0 +1,32 @@
+
+{% assign film_format = product.metafields.custom.format.value %}
+{% assign film_condition = product.metafields.custom.condition.value %}
+
+{% if film_format != blank or film_condition != blank %}
+  <div class="film-card-meta">
+    {% if film_format != blank %}
+      <span>{{ film_format | escape }}</span>
+    {% endif %}
+
+    {% if film_format != blank and film_condition != blank %}
+      <span aria-hidden="true">·</span>
+    {% endif %}
+
+    {% if film_condition != blank %}
+      <span>{{ film_condition | escape }}</span>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .film-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-block: 0.25rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    opacity: 0.75;
+  }
+{% endstylesheet %}

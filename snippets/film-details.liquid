@@ -13,6 +13,13 @@
         {{ product.metafields.custom.condition.value }}
       </p>
     {% endif %}
+    
+    {% if product.metafields.custom.release_year != blank %}
+  <p class="film-details__item">
+    <span class="film-details__label">Release year:</span>
+    {{ product.metafields.custom.release_year.value }}
+  </p>
+{% endif %}
   </div>
 {% endif %}
 
