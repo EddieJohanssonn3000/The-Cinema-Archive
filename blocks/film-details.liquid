@@ -1,0 +1,35 @@
+{% capture film_details %}
+  {% render 'film-details', product: closest.product %}
+{% endcapture %}
+
+{% assign film_details = film_details | strip %}
+
+{% if film_details != blank %}
+  <div
+    class="film-details-block"
+    {{ block.shopify_attributes }}
+  >
+    {{ film_details }}
+  </div>
+{% elsif request.design_mode %}
+  <div
+    class="film-details-block"
+    {{ block.shopify_attributes }}
+  >
+    <p>Film details: this product has no format, condition, release year or runtime metafields.</p>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Film details",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Film details",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

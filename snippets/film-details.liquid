@@ -1,39 +1,87 @@
-{% if product.metafields.custom.format != blank or product.metafields.custom.condition != blank %}
-  <div class="film-details">
-    {% if product.metafields.custom.format != blank %}
-      <p class="film-details__item">
-        <span class="film-details__label">Format:</span>
-        {{ product.metafields.custom.format.value }}
-      </p>
+{% doc %}
+  Renders a film's format, condition, release year and runtime from product metafields.
+  Renders nothing when none of the metafields have a value.
+
+  @param {product} product - Product object
+
+  @example
+  {% render 'film-details', product: closest.product %}
+{% enddoc %}
+
+{% liquid
+  assign film_format = product.metafields.custom.format.value
+  assign film_condition = product.metafields.custom.condition.value
+  assign release_year = product.metafields.custom.release_year.value
+  assign runtime = product.metafields.custom.runtime.value
+%}
+
+{% if film_format != blank or film_condition != blank or release_year != blank or runtime != blank %}
+  <dl class="film-details">
+    {% if film_format != blank %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Format</dt>
+        <dd class="film-details__value">{{ film_format | escape }}</dd>
+      </div>
     {% endif %}
 
-    {% if product.metafields.custom.condition != blank %}
-      <p class="film-details__item">
-        <span class="film-details__label">Skick:</span>
-        {{ product.metafields.custom.condition.value }}
-      </p>
+    {% if film_condition != blank %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Condition</dt>
+        <dd class="film-details__value">{{ film_condition | escape }}</dd>
+      </div>
     {% endif %}
-    
-    {% if product.metafields.custom.release_year != blank %}
-  <p class="film-details__item">
-    <span class="film-details__label">Release year:</span>
-    {{ product.metafields.custom.release_year.value }}
-  </p>
-{% endif %}
-  </div>
+
+    {% if release_year != blank %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Release year</dt>
+        <dd class="film-details__value">{{ release_year }}</dd>
+      </div>
+    {% endif %}
+
+    {% if runtime != blank %}
+      {% liquid
+        # Runtime is stored as minutes, e.g. 99 is shown as "1 h 39 min"
+        assign runtime_hours = runtime | divided_by: 60
+        assign runtime_minutes = runtime | modulo: 60
+      %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Runtime</dt>
+        <dd class="film-details__value">
+          <time datetime="PT{{ runtime }}M">
+            {%- if runtime_hours > 0 -%}
+              {{ runtime_hours }} h
+            {%- endif -%}
+            {%- if runtime_hours > 0 and runtime_minutes > 0 %} {% endif -%}
+            {%- if runtime_minutes > 0 -%}
+              {{ runtime_minutes }} min
+            {%- endif -%}
+          </time>
+        </dd>
+      </div>
+    {% endif %}
+  </dl>
 {% endif %}
 
 {% stylesheet %}
   .film-details {
-    margin-block: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
   }
 
   .film-details__item {
-    margin-block: 0.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     font-size: 0.95rem;
   }
 
   .film-details__label {
     font-weight: 600;
+  }
+
+  .film-details__value {
+    margin: 0;
   }
 {% endstylesheet %}
