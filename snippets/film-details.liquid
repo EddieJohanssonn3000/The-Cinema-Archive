@@ -1,5 +1,5 @@
 {% doc %}
-  Renders a film's format, condition, release year and runtime from product metafields.
+  Renders a film's director, format, condition, release year and runtime from product metafields.
   Renders nothing when none of the metafields have a value.
 
   @param {product} product - Product object
@@ -9,14 +9,30 @@
 {% enddoc %}
 
 {% liquid
+  # The director metafield references a Director metaobject; its fields also need .value
+  assign director = product.metafields.custom.director.value
+  assign director_name = director.name.value
   assign film_format = product.metafields.custom.format.value
   assign film_condition = product.metafields.custom.condition.value
   assign release_year = product.metafields.custom.release_year.value
   assign runtime = product.metafields.custom.runtime.value
 %}
 
-{% if film_format != blank or film_condition != blank or release_year != blank or runtime != blank %}
+{% if director_name != blank or film_format != blank or film_condition != blank or release_year != blank or runtime != blank %}
   <dl class="film-details">
+    {% if director_name != blank %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Director</dt>
+        <dd class="film-details__value">
+          {%- if director.system.url != blank -%}
+            <a href="{{ director.system.url }}">{{ director_name | escape }}</a>
+          {%- else -%}
+            {{ director_name | escape }}
+          {%- endif -%}
+        </dd>
+      </div>
+    {% endif %}
+
     {% if film_format != blank %}
       <div class="film-details__item">
         <dt class="film-details__label">Format</dt>
@@ -83,5 +99,11 @@
 
   .film-details__value {
     margin: 0;
+  }
+
+  .film-details__value a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 {% endstylesheet %}
