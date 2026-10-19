@@ -1230,6 +1230,29 @@
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
   }
+
+  #header-component .header__row--top {
+    background-color: #f5eedc !important;
+    border-bottom: 2px solid #191919;
+  }
+
+  #header-component .header__row--top .menu-list__link {
+    color: #191919;
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  #header-component .header__row--top .menu-list__link--active,
+  #header-component .header__row--top .menu-list__link:hover {
+    background-color: #f2d46d;
+    color: #191919;
+  }
+
+  #header-component .header__row--top .header-logo,
+  #header-component .header__row--top .header-actions__action {
+    color: #191919;
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
