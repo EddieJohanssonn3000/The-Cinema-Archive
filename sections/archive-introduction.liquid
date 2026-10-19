@@ -1,9 +1,5 @@
 <section class="archive-introduction">
   <div class="archive-introduction__main">
-    <p class="archive-introduction__eyebrow">
-      {{ section.settings.eyebrow }}
-    </p>
-
     <h1 class="archive-introduction__heading">
       {{ section.settings.heading }}
     </h1>
@@ -58,13 +54,6 @@
   .archive-introduction__main {
     position: relative;
     z-index: 1;
-  }
-
-  .archive-introduction__eyebrow {
-    margin: 0 0 clamp(2.5rem, 6vw, 4rem);
-    font-family: var(--font-body--family);
-    font-size: clamp(1rem, 1.5vw, 1.35rem);
-    font-weight: var(--font-body--weight);
   }
 
   .archive-introduction__heading {
@@ -139,8 +128,8 @@
 
   .archive-introduction__supporting-content {
     position: absolute;
-    right: 7%;
-    bottom: 1rem;
+    right: 3.9rem;
+    bottom: 3rem;
     z-index: 3;
     width: min(32rem, 38%);
   }
@@ -191,10 +180,6 @@
       padding-bottom: 3rem;
     }
 
-    .archive-introduction__eyebrow {
-      margin-bottom: 3rem;
-    }
-
     .archive-introduction__heading {
       max-width: 10ch;
       font-size: clamp(3.25rem, 17vw, 6rem);
@@ -231,12 +216,6 @@
 {
   "name": "Archive introduction",
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Small heading",
-      "default": "THE CINEMA ARCHIVE"
-    },
     {
       "type": "richtext",
       "id": "heading",
