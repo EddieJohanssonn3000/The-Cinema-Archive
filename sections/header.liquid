@@ -1356,13 +1356,30 @@
     }
 
     #header-component .header__row--top .header-actions {
-      width: 100%;
+      flex: 0 0 auto;
+      width: auto;
       margin-inline-start: 0;
       justify-content: flex-end;
       padding-inline: 0;
     }
 
-    #header-component .header__row--top .header-actions__action:not(:has(.header-actions__cart-icon)),
+    /* Search icon sits right after the menu; auto end margin pushes the cart to the far edge */
+    #header-component .header__row--top .search-action {
+      flex: 0 0 auto;
+      margin-inline: 0 auto;
+      padding-inline: clamp(1rem, 2vw, 2rem);
+    }
+
+    #header-component .header__row--top .search-action .header-actions__action {
+      align-items: center;
+    }
+
+    #header-component .header__row--top .search-action .header-actions__action svg {
+      width: clamp(1.5rem, 2vw, 2rem);
+      height: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    #header-component .header__row--top header-actions .header-actions__action:not(:has(.header-actions__cart-icon)),
     #header-component .header__row--top .header-actions__action:has(.header-actions__cart-icon) .svg-wrapper {
       display: none;
     }
