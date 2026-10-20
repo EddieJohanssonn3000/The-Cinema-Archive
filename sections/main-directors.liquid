@@ -1,0 +1,177 @@
+{% comment %}
+  Directors overview page. Lists every entry of the `directors` metaobject as a card
+  (portrait + name) that links to that director's own page (templates/metaobject/directors.json).
+
+  `metaobjects.directors.values` returns the entries of a metaobject definition.
+  Limitation: Shopify documents a maximum of 50 entries per loop. Fine for a small
+  curated archive; a larger list would need the `paginate` tag.
+{% endcomment %}
+
+{% liquid
+  assign directors = metaobjects.directors.values
+%}
+
+<div
+  class="section section--page-width spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="directors-overview">
+    <h1 class="directors-overview__heading">{{ section.settings.heading | escape }}</h1>
+
+    {% if directors.size > 0 %}
+      <ul class="directors-overview__grid" role="list">
+        {% for director in directors %}
+          {% liquid
+            assign director_name = director.name.value
+            assign portrait = director.portrait.value
+            assign portrait_alt = portrait.alt | default: director_name
+          %}
+          <li class="director-card">
+            {% if director.system.url != blank %}
+              <a class="director-card__link" href="{{ director.system.url }}">
+            {% else %}
+              <div class="director-card__link">
+            {% endif %}
+
+              {% if portrait != blank %}
+                <div class="director-card__portrait">
+                  {{
+                    portrait
+                    | image_url: width: 800
+                    | image_tag:
+                      class: 'director-card__image',
+                      widths: '300, 450, 600, 800',
+                      sizes: '(min-width: 750px) 25vw, 50vw',
+                      alt: portrait_alt,
+                      loading: 'lazy'
+                  }}
+                </div>
+              {% else %}
+                <div class="director-card__portrait director-card__portrait--empty"></div>
+              {% endif %}
+
+              <span class="director-card__name">{{ director_name | escape }}</span>
+
+            {% if director.system.url != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="directors-overview__empty">{{ section.settings.empty_text | escape }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .directors-overview__heading {
+    margin-block: 0 2rem;
+  }
+
+  .directors-overview__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .directors-overview__empty {
+    margin: 0;
+  }
+
+  .director-card__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .director-card__portrait {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 2px solid var(--color-foreground);
+  }
+
+  .director-card__portrait--empty {
+    background: rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  .director-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .director-card__name {
+    display: block;
+    margin-block-start: 0.75rem;
+    font-family: var(--font-heading--family);
+    font-size: 1.25rem;
+  }
+
+  a.director-card__link:hover .director-card__name,
+  a.director-card__link:focus-visible .director-card__name {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  @media screen and (min-width: 750px) {
+    .directors-overview__grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2.5rem 1.5rem;
+    }
+
+    .director-card__name {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Directors overview",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Directors"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Text when no directors are found",
+      "default": "No directors have been added to the archive yet."
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ]
+}
+{% endschema %}
