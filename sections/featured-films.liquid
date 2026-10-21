@@ -87,6 +87,19 @@
       {% endfor %}
     </ul>
   {% endif %}
+
+  {% liquid
+    # The button always leads to all films; [count] is replaced with the number of products
+    assign all_films_count = collections.all.products_count
+    assign all_films_count_text = all_films_count | append: ''
+    assign button_label = section.settings.button_label | replace: '[count]', all_films_count_text
+  %}
+  {% if button_label != blank and all_films_count > 0 %}
+    <a class="featured-films__button" href="{{ routes.all_products_collection_url }}">
+      <span>{{ button_label | escape }}</span>
+      <span class="featured-films__button-arrow" aria-hidden="true">↗</span>
+    </a>
+  {% endif %}
 </section>
 
 {% stylesheet %}
@@ -224,6 +237,35 @@
     text-transform: uppercase;
   }
 
+  .featured-films__button {
+    display: flex;
+    align-items: stretch;
+    width: fit-content;
+    margin-block-start: clamp(3rem, 6vw, 5rem);
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    font-family: var(--font-body--family);
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 2px solid var(--archive-ink);
+    box-shadow: 0.45rem 0.45rem 0 var(--archive-ink);
+  }
+
+  .featured-films__button span:first-child {
+    padding: 1rem 1.25rem;
+  }
+
+  .featured-films__button-arrow {
+    display: grid;
+    width: 3.5rem;
+    place-items: center;
+    border-inline-start: 2px solid var(--archive-ink);
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
+
   .film-card__link:hover .film-card__title,
   .film-card__link:focus-visible .film-card__title {
     text-decoration: underline;
@@ -234,6 +276,12 @@
     .featured-films__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 3rem 2rem;
+    }
+
+    /* Staggered layout: every second card starts lower. Padding (not transform)
+       so the row grows and following content is never overlapped. */
+    .film-card:nth-child(even) {
+      padding-block-start: clamp(4rem, 8vw, 8rem);
     }
 
     .featured-films__intro {
@@ -291,6 +339,13 @@
       "max": 12,
       "step": 1,
       "default": 4
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "info": "Links to all films. [count] is replaced with the number of films.",
+      "default": "View all [count] films"
     }
   ],
   "presets": [
