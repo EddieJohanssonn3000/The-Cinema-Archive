@@ -253,6 +253,17 @@
         "callout": "Keep cinema physical",
         "text": "<p>We believe films deserve more than a thumbnail and an expiry date. Our collection brings together the strange, beautiful and essential.</p>"
       }
+    },
+    "director_focus_mh9Jjq": {
+      "type": "director-focus",
+      "name": "Director focus",
+      "settings": {
+        "director": "sofia-coppola",
+        "number": "01",
+        "label": "Director focus / Vol. 07",
+        "excerpt_words": 20,
+        "button_label": "Enter the director archive"
+      }
     }
   },
   "order": [
@@ -260,6 +271,7 @@
     "archive_marquee_YbEHbw",
     "featured_films_BLDEct",
     "product_list_fa6P9H",
-    "archive_quote_keM8i4"
+    "archive_quote_keM8i4",
+    "director_focus_mh9Jjq"
   ]
 }
