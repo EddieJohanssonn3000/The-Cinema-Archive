@@ -30,6 +30,18 @@
         "label_end": "Issue 01 / Spring"
       }
     },
+    "featured_films_BLDEct": {
+      "type": "featured-films",
+      "name": "Featured films",
+      "settings": {
+        "label": "01 / The edit",
+        "heading": "<p>Films worth</p><p><em>keeping.</em></p>",
+        "description": "<p>Four singular films, rescued from the shelf and ready for their next close-up.</p>",
+        "collection": "",
+        "max_products": 4,
+        "button_label": "View all [count] films"
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -208,6 +220,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "t:names.featured_collection",
       "settings": {
         "collection": "all",
@@ -227,15 +240,6 @@
         "background_color": "",
         "padding-block-start": 48,
         "padding-block-end": 48
-      }
-    },
-    "featured_films_BLDEct": {
-      "type": "featured-films",
-      "name": "Featured films",
-      "settings": {
-        "label": "01 / The edit",
-        "heading": "<p>Films worth</p><p><em>keeping.</em></p>",
-        "description": "<p>Four singular films, rescued from the shelf and ready for their next close-up.</p>"
       }
     }
   },
