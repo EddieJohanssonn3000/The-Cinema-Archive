@@ -21,6 +21,15 @@
         "panel_callout": "Play it again ↗"
       }
     },
+    "archive_marquee_YbEHbw": {
+      "type": "archive-marquee",
+      "name": "Archive marquee",
+      "settings": {
+        "label_start": "Now screening in the archive",
+        "quote": "Every copy watched, checked and catalogued by a real film obsessive.",
+        "label_end": "Issue 01 / Spring"
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -220,19 +229,20 @@
         "padding-block-end": 48
       }
     },
-    "archive_marquee_YbEHbw": {
-      "type": "archive-marquee",
-      "name": "Archive marquee",
+    "featured_films_BLDEct": {
+      "type": "featured-films",
+      "name": "Featured films",
       "settings": {
-        "label_start": "Now screening in the archive",
-        "quote": "Every copy watched, checked and catalogued by a real film obsessive.",
-        "label_end": "Issue 01 / Spring"
+        "label": "01 / The edit",
+        "heading": "<p>Films worth</p><p><em>keeping.</em></p>",
+        "description": "<p>Four singular films, rescued from the shelf and ready for their next close-up.</p>"
       }
     }
   },
   "order": [
     "archive_introduction_djPFQr",
     "archive_marquee_YbEHbw",
+    "featured_films_BLDEct",
     "product_list_fa6P9H"
   ]
 }
