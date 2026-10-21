@@ -1,0 +1,235 @@
+{% comment %}
+  Split section: full-height photo on the left, red panel with a quote on the right.
+  Every field is optional; without an image the left half stays dark.
+{% endcomment %}
+
+{% liquid
+  assign image = section.settings.image
+  assign image_credit = section.settings.image_credit
+  assign label = section.settings.label
+  assign quote = section.settings.quote
+  assign callout = section.settings.callout
+  assign text = section.settings.text
+%}
+
+<section class="archive-quote">
+  <div class="archive-quote__media">
+    {% if image != blank %}
+      {{
+        image
+        | image_url: width: 1600
+        | image_tag:
+          class: 'archive-quote__image',
+          widths: '600, 900, 1200, 1600',
+          sizes: '(min-width: 750px) 50vw, 100vw',
+          loading: 'lazy'
+      }}
+    {% endif %}
+
+    {% if image_credit != blank %}
+      <p class="archive-quote__credit">{{ image_credit | escape }}</p>
+    {% endif %}
+  </div>
+
+  <div class="archive-quote__panel">
+    {% if label != blank %}
+      <p class="archive-quote__label">{{ label | escape }}</p>
+    {% endif %}
+
+    {% if quote != blank %}
+      <blockquote class="archive-quote__quote">{{ quote }}</blockquote>
+    {% endif %}
+
+    {% if callout != blank or text != blank %}
+      <div class="archive-quote__note">
+        {% if callout != blank %}
+          <p class="archive-quote__callout">{{ callout | escape }}</p>
+        {% endif %}
+
+        {% if text != blank %}
+          <div class="archive-quote__text">{{ text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .archive-quote {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-red: #e94b35;
+    --archive-yellow: #f2d46d;
+
+    display: grid;
+    color: var(--archive-ink);
+  }
+
+  .archive-quote__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--archive-ink);
+  }
+
+  .archive-quote__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .archive-quote__credit {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    font-family: var(--font-accent--family);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .archive-quote__panel {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3.75rem);
+    background: var(--archive-red);
+  }
+
+  .archive-quote__label {
+    margin: 0;
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-quote__quote {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.25rem, 4.5vw, 4.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .archive-quote__quote p {
+    margin: 0;
+  }
+
+  .archive-quote__quote em {
+    color: var(--archive-cream);
+    font-style: italic;
+  }
+
+  .archive-quote__note {
+    max-width: 34rem;
+  }
+
+  .archive-quote__callout {
+    position: relative;
+    width: fit-content;
+    margin: 0 0 0.75rem;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-style: italic;
+    transform: rotate(-4deg);
+    transform-origin: left bottom;
+  }
+
+  .archive-quote__callout::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.25rem;
+    left: 0;
+    height: 0.2rem;
+    background: var(--archive-yellow);
+    content: '';
+    transform: rotate(-1deg);
+  }
+
+  .archive-quote__text {
+    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+    line-height: 1.35;
+  }
+
+  .archive-quote__text p {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .archive-quote {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .archive-quote__media {
+      aspect-ratio: auto;
+      min-height: 36rem;
+    }
+
+    .archive-quote__image {
+      position: absolute;
+      inset: 0;
+    }
+
+    .archive-quote__panel {
+      justify-content: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Archive quote",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_credit",
+      "label": "Image credit",
+      "default": "Photo: Jeremy Yap / Unsplash"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "A note from the projection booth"
+    },
+    {
+      "type": "richtext",
+      "id": "quote",
+      "label": "Quote",
+      "info": "Italic text is shown in cream.",
+      "default": "<p>“Streaming is convenient. A shelf is a <em>self-portrait.</em>”</p>"
+    },
+    {
+      "type": "text",
+      "id": "callout",
+      "label": "Callout",
+      "default": "Keep cinema physical"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>We believe films deserve more than a thumbnail and an expiry date. Our collection brings together the strange, beautiful and essential.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Archive quote"
+    }
+  ]
+}
+{% endschema %}

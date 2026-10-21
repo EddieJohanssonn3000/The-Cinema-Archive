@@ -241,12 +241,25 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "archive_quote_keM8i4": {
+      "type": "archive-quote",
+      "name": "Archive quote",
+      "settings": {
+        "image": "shopify://shop_images/Jeremy_Yap-modified.jpg",
+        "image_credit": "Photo: Jeremy Yap / Unsplash",
+        "label": "A note from the projection booth",
+        "quote": "<p>“Streaming is convenient. A shelf is a <em>self-portrait.</em>”</p>",
+        "callout": "Keep cinema physical",
+        "text": "<p>We believe films deserve more than a thumbnail and an expiry date. Our collection brings together the strange, beautiful and essential.</p>"
+      }
     }
   },
   "order": [
     "archive_introduction_djPFQr",
     "archive_marquee_YbEHbw",
     "featured_films_BLDEct",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "archive_quote_keM8i4"
   ]
 }
