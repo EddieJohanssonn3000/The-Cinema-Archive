@@ -1,0 +1,192 @@
+{% comment %}
+  Newsletter band: label, large heading and Horizon's email signup block.
+  The signup is the theme block blocks/email-signup.liquid (Shopify's native customer form),
+  added inside this section in the Theme Editor. Its look is adjusted below, scoped to this
+  section only, so the footer signup is not affected.
+{% endcomment %}
+
+{% liquid
+  assign label = section.settings.label
+  assign heading = section.settings.heading
+%}
+
+<section class="archive-newsletter">
+  {% if label != blank %}
+    <p class="archive-newsletter__label">{{ label | escape }}</p>
+  {% endif %}
+
+  <div class="archive-newsletter__body">
+    {% if heading != blank %}
+      <div class="archive-newsletter__heading">{{ heading }}</div>
+    {% endif %}
+
+    <div class="archive-newsletter__signup">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .archive-newsletter {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+
+    padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+  }
+
+  .archive-newsletter p {
+    margin: 0;
+  }
+
+  .archive-newsletter__label {
+    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-newsletter__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .archive-newsletter__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+  }
+
+  .archive-newsletter__heading p {
+    margin: 0;
+  }
+
+  .archive-newsletter__signup {
+    width: 100%;
+  }
+
+  /* Horizon email signup block, restyled inside this section only */
+  .archive-newsletter .email-signup__heading {
+    padding: 0;
+    margin-block-end: 1.25rem;
+    color: var(--archive-cream);
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .archive-newsletter .email-signup__input-group {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    background: var(--archive-cream);
+    border: 2px solid var(--archive-ink);
+    box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+  }
+
+  .archive-newsletter .email-signup__input-group .email-signup__input {
+    width: auto;
+    padding: 1.1rem 1.25rem;
+    color: var(--archive-ink);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.15rem;
+    outline: none;
+  }
+
+  .archive-newsletter .email-signup__input-group .email-signup__input::placeholder {
+    color: rgb(25 25 25 / 0.6);
+  }
+
+  /* Arrow cell, matching the other call-to-action buttons (set "Arrow" in the block settings) */
+  .archive-newsletter .email-signup__input-group .email-signup__button {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: clamp(3.5rem, 5vw, 4.5rem);
+    height: auto;
+    margin: 0;
+    padding: 0;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border: 0;
+    border-inline-start: 2px solid var(--archive-ink);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .archive-newsletter .email-signup__input-group .email-signup__button .email-signup__button-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    transform: rotate(-45deg);
+  }
+
+  .archive-newsletter .email-signup__message {
+    margin-block-start: 1rem;
+    color: var(--archive-cream);
+  }
+
+  @media screen and (min-width: 990px) {
+    .archive-newsletter__body {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .archive-newsletter__heading {
+      flex: 0 1 auto;
+    }
+
+    .archive-newsletter__signup {
+      flex: 0 1 36rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Archive newsletter",
+  "max_blocks": 1,
+  "blocks": [
+    {
+      "type": "email-signup"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "New arrivals, old favourites and one very good recommendation."
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>The Friday Matinée</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Archive newsletter",
+      "blocks": [
+        {
+          "type": "email-signup"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
