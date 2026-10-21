@@ -69,6 +69,7 @@
                 {{- director_name | escape -}}
                 {%- if director_name != blank and release_year != blank %} · {% endif -%}
                 {{- release_year -}}
+              </p>
             {% endif %}
 
             {% if film_format != blank or film_condition != blank %}
