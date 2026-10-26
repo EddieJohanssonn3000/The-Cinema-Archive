@@ -508,12 +508,22 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "product_director_films_m8hWyr": {
+      "type": "product-director-films",
+      "name": "More from the director",
+      "settings": {
+        "label": "",
+        "heading": "More from [director] in the archive",
+        "max_products": 4
+      }
     }
   },
   "order": [
     "archive_back_link_AebwFt",
     "main",
     "product_archive_note_KcjreR",
-    "product_recommendations_qggXJq"
+    "product_recommendations_qggXJq",
+    "product_director_films_m8hWyr"
   ]
 }

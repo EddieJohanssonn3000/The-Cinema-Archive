@@ -1,0 +1,139 @@
+{% doc %}
+  Film card: poster (2:3, framed), title and price, "Director · Year" and format/condition tags.
+  The whole card is one link to the product. Empty values are not rendered.
+  Same markup and class names as the cards in sections/featured-films.liquid, so that section
+  can switch to this snippet later.
+
+  @param {product} product - Product object
+  @param {string} [sizes] - Image sizes attribute, defaults to a 4-column grid
+
+  @example
+  <li class="film-card">{% render 'film-card', product: product %}</li>
+{% enddoc %}
+
+{% liquid
+  assign image = product.featured_image
+  assign director_name = product.metafields.custom.director.value.name.value
+  assign release_year = product.metafields.custom.release_year.value
+  assign film_format = product.metafields.custom.format.value
+  assign film_condition = product.metafields.custom.condition.value
+  assign image_sizes = sizes | default: '(min-width: 990px) 25vw, 50vw'
+%}
+
+<a class="film-card__link" href="{{ product.url }}">
+  <div class="film-card__poster{% if image == blank %} film-card__poster--empty{% endif %}">
+    {% if image != blank %}
+      {{
+        image
+        | image_url: width: 900
+        | image_tag:
+          class: 'film-card__image',
+          widths: '300, 450, 600, 900',
+          sizes: image_sizes,
+          alt: image.alt | default: product.title,
+          loading: 'lazy'
+      }}
+    {% endif %}
+  </div>
+
+  <div class="film-card__header">
+    <h3 class="film-card__title">{{ product.title | escape }}</h3>
+    <span class="film-card__price">{{ product.price | money }}</span>
+  </div>
+
+  {% if director_name != blank or release_year != blank %}
+    <p class="film-card__meta">
+      {{- director_name | escape -}}
+      {%- if director_name != blank and release_year != blank %} · {% endif -%}
+      {{- release_year -}}
+    </p>
+  {% endif %}
+
+  {% if film_format != blank or film_condition != blank %}
+    <div class="film-card__tags">
+      {% if film_format != blank %}
+        <span class="film-card__tag">{{ film_format | escape }}</span>
+      {% endif %}
+      {% if film_condition != blank %}
+        <span class="film-card__tag">{{ film_condition | escape }}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+</a>
+
+{% stylesheet %}
+  .film-card__link {
+    display: block;
+    color: #191919;
+    text-decoration: none;
+  }
+
+  .film-card__poster {
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border: 2px solid #191919;
+  }
+
+  .film-card__poster--empty {
+    background: rgb(25 25 25 / 0.08);
+  }
+
+  .film-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .film-card__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-start: 1rem;
+  }
+
+  .film-card__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.3rem, 2vw, 2rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  .film-card__price {
+    flex: 0 0 auto;
+    font-family: var(--font-accent--family);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .film-card__meta {
+    margin: 0.4rem 0 0;
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+  }
+
+  .film-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: 1rem;
+  }
+
+  .film-card__tag {
+    padding: 0.35em 0.6em;
+    border: 1.5px solid #191919;
+    font-family: var(--font-accent--family);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .film-card__link:hover .film-card__title,
+  .film-card__link:focus-visible .film-card__title {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+{% endstylesheet %}
