@@ -307,6 +307,14 @@
               },
               "block_order": []
             },
+            "film_buy_note_FTbGAe": {
+              "type": "film-buy-note",
+              "name": "Film buy note",
+              "settings": {
+                "text": "Checked by hand · Ships in 1–2 days · Plastic-free packaging"
+              },
+              "blocks": {}
+            },
             "text_aEtTtq": {
               "type": "text",
               "name": "t:names.product_description",
@@ -343,6 +351,7 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "film_buy_note_FTbGAe",
             "text_aEtTtq"
           ]
         }

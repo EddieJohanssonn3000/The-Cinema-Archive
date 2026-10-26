@@ -1,0 +1,93 @@
+{% comment %}
+  Small note under the buy button on the product page, e.g.
+  "Checked by hand · Ships in 1–2 days · Plastic-free packaging".
+
+  This block's stylesheet also styles Horizon's add-to-cart button inside the product form
+  (blue button, arrow cell and offset shadow), so the buy logic stays Horizon's own.
+  The styles load with this block: if the block is removed, the button falls back to
+  Horizon's default look. The sticky add-to-cart bar is not affected.
+{% endcomment %}
+
+{% if block.settings.text != blank %}
+  <p class="film-buy-note" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+{% endif %}
+
+{% stylesheet %}
+  .film-buy-note {
+    margin: 0;
+    color: #191919;
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* Horizon's add-to-cart button in the product form */
+  .buy-buttons-block .product-form-buttons .add-to-cart-button {
+    position: relative;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 4.5rem;
+    padding: 0 5.5rem 0 1.75rem;
+    color: #f5eedc;
+    background: #3155e8;
+    border: 2px solid #191919;
+    border-radius: 0;
+    box-shadow: 0.5rem 0.5rem 0 #191919;
+    font-family: var(--font-body--family);
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .buy-buttons-block .product-form-buttons .add-to-cart-button .add-to-cart-icon {
+    display: none;
+  }
+
+  /* Arrow cell on the right, as on the other call-to-action buttons */
+  .buy-buttons-block .product-form-buttons .add-to-cart-button::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    display: grid;
+    width: 4.5rem;
+    place-items: center;
+    color: #191919;
+    background: #f5eedc;
+    border-inline-start: 2px solid #191919;
+    content: '↗';
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
+
+  .buy-buttons-block .product-form-buttons .add-to-cart-button:hover::after,
+  .buy-buttons-block .product-form-buttons .add-to-cart-button:focus-visible::after {
+    background: #f2d46d;
+  }
+
+  .buy-buttons-block .product-form-buttons .add-to-cart-button:disabled {
+    opacity: 0.55;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Film buy note",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Checked by hand · Ships in 1–2 days · Plastic-free packaging"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Film buy note"
+    }
+  ]
+}
+{% endschema %}
