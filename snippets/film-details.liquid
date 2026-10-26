@@ -1,5 +1,5 @@
 {% doc %}
-  Renders a film's director, format, release (year · runtime) and condition from product
+  Renders a film's director, format, release year, runtime and condition from product
   metafields as a list with a rule between each row.
   Renders nothing when none of the metafields have a value.
 
@@ -41,28 +41,31 @@
       </div>
     {% endif %}
 
-    {% if release_year != blank or runtime != blank %}
+    {% if release_year != blank %}
       <div class="film-details__item">
-        <dt class="film-details__label">Release</dt>
+        <dt class="film-details__label">Release year</dt>
+        <dd class="film-details__value">{{ release_year }}</dd>
+      </div>
+    {% endif %}
+
+    {% if runtime != blank %}
+      {% liquid
+        # Runtime is stored as minutes, e.g. 99 is shown as "1 h 39 min"
+        assign runtime_hours = runtime | divided_by: 60
+        assign runtime_minutes = runtime | modulo: 60
+      %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Runtime</dt>
         <dd class="film-details__value">
-          {{- release_year -}}
-          {%- if release_year != blank and runtime != blank %} · {% endif -%}
-          {%- if runtime != blank -%}
-            {% liquid
-              # Runtime is stored as minutes, e.g. 99 is shown as "1 h 39 min"
-              assign runtime_hours = runtime | divided_by: 60
-              assign runtime_minutes = runtime | modulo: 60
-            %}
-            <time datetime="PT{{ runtime }}M">
-              {%- if runtime_hours > 0 -%}
-                {{ runtime_hours }} h
-              {%- endif -%}
-              {%- if runtime_hours > 0 and runtime_minutes > 0 %} {% endif -%}
-              {%- if runtime_minutes > 0 -%}
-                {{ runtime_minutes }} min
-              {%- endif -%}
-            </time>
-          {%- endif -%}
+          <time datetime="PT{{ runtime }}M">
+            {%- if runtime_hours > 0 -%}
+              {{ runtime_hours }} h
+            {%- endif -%}
+            {%- if runtime_hours > 0 and runtime_minutes > 0 %} {% endif -%}
+            {%- if runtime_minutes > 0 -%}
+              {{ runtime_minutes }} min
+            {%- endif -%}
+          </time>
         </dd>
       </div>
     {% endif %}
@@ -90,7 +93,7 @@
     grid-template-columns: minmax(6rem, 1fr) minmax(0, 2fr);
     gap: 1rem;
     align-items: baseline;
-    padding-block: 1.1rem;
+    padding-block: 0.85rem;
     border-block-end: 1px solid var(--archive-ink);
   }
 
@@ -105,7 +108,7 @@
   .film-details__value {
     margin: 0;
     font-family: var(--font-body--family);
-    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
     line-height: 1.25;
   }
 

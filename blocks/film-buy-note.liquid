@@ -3,9 +3,9 @@
   "Checked by hand · Ships in 1–2 days · Plastic-free packaging".
 
   This block's stylesheet also styles Horizon's add-to-cart button inside the product form
-  (blue button, arrow cell and offset shadow), so the buy logic stays Horizon's own.
-  The styles load with this block: if the block is removed, the button falls back to
-  Horizon's default look. The sticky add-to-cart bar is not affected.
+  (blue button, arrow cell and offset shadow) and the sticky add-to-cart bar, so the buy
+  logic stays Horizon's own. The styles load with this block: if the block is removed,
+  both fall back to Horizon's default look.
 {% endcomment %}
 
 {% if block.settings.text != blank %}
@@ -28,15 +28,15 @@
     position: relative;
     justify-content: flex-start;
     width: 100%;
-    min-height: 4.5rem;
-    padding: 0 5.5rem 0 1.75rem;
+    min-height: 3.75rem;
+    padding: 0 4.75rem 0 1.5rem;
     color: #f5eedc;
     background: #3155e8;
     border: 2px solid #191919;
     border-radius: 0;
     box-shadow: 0.5rem 0.5rem 0 #191919;
     font-family: var(--font-body--family);
-    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
     font-weight: 700;
     text-transform: uppercase;
   }
@@ -51,13 +51,13 @@
     inset-block: 0;
     inset-inline-end: 0;
     display: grid;
-    width: 4.5rem;
+    width: 3.75rem;
     place-items: center;
     color: #191919;
     background: #f5eedc;
     border-inline-start: 2px solid #191919;
     content: '↗';
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 400;
   }
 
@@ -70,6 +70,55 @@
     opacity: 0.55;
     box-shadow: none;
     cursor: not-allowed;
+  }
+
+  /* Horizon's sticky add-to-cart bar (shown after scrolling past the buy button).
+     Only the look changes; position, animation and behaviour stay Horizon's. */
+  sticky-add-to-cart .sticky-add-to-cart__bar {
+    border-radius: 0;
+    box-shadow: 0.4rem 0.4rem 0 #191919;
+  }
+
+  sticky-add-to-cart .sticky-add-to-cart__bar::before {
+    background: #f5eedc;
+    border: 2px solid #191919;
+    border-radius: 0;
+    backdrop-filter: none;
+  }
+
+  sticky-add-to-cart .sticky-add-to-cart__image {
+    border: 1.5px solid #191919;
+    border-radius: 0;
+  }
+
+  sticky-add-to-cart .sticky-add-to-cart__title {
+    color: #191919;
+    font-family: var(--font-heading--family);
+    font-size: 1.15rem;
+    font-weight: var(--font-heading--weight);
+  }
+
+  sticky-add-to-cart .sticky-add-to-cart__price {
+    color: #191919;
+    font-family: var(--font-accent--family);
+    font-weight: 700;
+  }
+
+  sticky-add-to-cart .sticky-add-to-cart__button.add-to-cart-button,
+  sticky-add-to-cart .sticky-add-to-cart__button.add-to-cart-button:hover {
+    color: #f5eedc;
+    background: #3155e8;
+    border: 2px solid #191919;
+    border-radius: 0;
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 749px) {
+    sticky-add-to-cart .sticky-add-to-cart__bar {
+      box-shadow: none;
+    }
   }
 {% endstylesheet %}
 
