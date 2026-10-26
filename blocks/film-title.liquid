@@ -1,0 +1,96 @@
+{% comment %}
+  Film title block for the product page: the title in large type with the last word in
+  blue italics (e.g. "PARIS, Texas"), followed by the product description as a lead text.
+  Add it to the product details column. Replaces Horizon's title and description text blocks,
+  so hide those to avoid a second <h1>.
+{% endcomment %}
+
+{% liquid
+  assign product = closest.product
+  assign title = product.title
+
+  # Split the title: everything except the last word, and the last word
+  assign title_parts = title | split: ' '
+  assign last_word = title_parts.last
+  assign first_words = ''
+  if title_parts.size > 1
+    assign first_words = title | remove_last: last_word | strip
+  endif
+%}
+
+<div class="film-title" {{ block.shopify_attributes }}>
+  <h1 class="film-title__heading">
+    {%- if first_words != blank -%}
+      <span class="film-title__first">{{ first_words | escape }}</span>
+    {%- endif -%}
+    <span class="film-title__last">{{ last_word | escape }}</span>
+  </h1>
+
+  {% if block.settings.show_description and product.description != blank %}
+    <div class="film-title__description">{{ product.description }}</div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .film-title {
+    --archive-ink: #191919;
+    --archive-blue: #3155e8;
+
+    color: var(--archive-ink);
+  }
+
+  .film-title__heading {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(3rem, 6.5vw, 7rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .film-title__first {
+    text-transform: uppercase;
+  }
+
+  .film-title__last {
+    color: var(--archive-blue);
+    font-style: italic;
+  }
+
+  .film-title__description {
+    max-width: 30ch;
+    margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.4rem, 2.4vw, 2.4rem);
+    line-height: 1.15;
+  }
+
+  .film-title__description p {
+    margin: 0 0 0.5em;
+  }
+
+  .film-title__description p:last-child {
+    margin-block-end: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Film title",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show product description",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Film title"
+    }
+  ]
+}
+{% endschema %}

@@ -9,6 +9,14 @@
  */
 {
   "sections": {
+    "archive_back_link_AebwFt": {
+      "type": "archive-back-link",
+      "name": "Back link",
+      "settings": {
+        "label": "Back to archive",
+        "link": "shopify://collections/all"
+      }
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -86,9 +94,26 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "film_title_djhnPL": {
+              "type": "film-title",
+              "name": "Film title",
+              "settings": {
+                "show_description": true
+              },
+              "blocks": {}
+            },
+            "film_price_gAwBxJ": {
+              "type": "film-price",
+              "name": "Film price",
+              "settings": {
+                "badge_label": "Only one copy"
+              },
+              "blocks": {}
+            },
             "group_icgrde": {
               "type": "group",
               "name": "t:names.header",
+              "disabled": true,
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -244,6 +269,7 @@
               "blocks": {
                 "quantity": {
                   "type": "quantity",
+                  "disabled": true,
                   "static": true,
                   "settings": {
                     "input_style": "default",
@@ -278,6 +304,7 @@
             "text_aEtTtq": {
               "type": "text",
               "name": "t:names.product_description",
+              "disabled": true,
               "settings": {
                 "text": "{{ closest.product.description }}",
                 "width": "100%",
@@ -304,11 +331,14 @@
             "film_details_xnh4we": {
               "type": "film-details",
               "name": "Film details",
+              "disabled": true,
               "settings": {},
               "blocks": {}
             }
           },
           "block_order": [
+            "film_title_djhnPL",
+            "film_price_gAwBxJ",
             "group_icgrde",
             "divider_VJhene",
             "variant_picker_R3rGDr",
@@ -479,6 +509,7 @@
     }
   },
   "order": [
+    "archive_back_link_AebwFt",
     "main",
     "product_recommendations_qggXJq"
   ]
