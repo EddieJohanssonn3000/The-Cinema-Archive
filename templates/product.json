@@ -110,6 +110,12 @@
               },
               "blocks": {}
             },
+            "film_details_xnh4we": {
+              "type": "film-details",
+              "name": "Film details",
+              "settings": {},
+              "blocks": {}
+            },
             "group_icgrde": {
               "type": "group",
               "name": "t:names.header",
@@ -327,24 +333,17 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "film_details_xnh4we": {
-              "type": "film-details",
-              "name": "Film details",
-              "disabled": true,
-              "settings": {},
-              "blocks": {}
             }
           },
           "block_order": [
             "film_title_djhnPL",
             "film_price_gAwBxJ",
+            "film_details_xnh4we",
             "group_icgrde",
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq",
-            "film_details_xnh4we"
+            "text_aEtTtq"
           ]
         }
       },
