@@ -211,19 +211,6 @@
                 "price_tVjtKg"
               ]
             },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "divider_color": "{{ settings.color_palette.color3 }}",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -300,6 +287,7 @@
                 },
                 "accelerated-checkout": {
                   "type": "accelerated-checkout",
+                  "disabled": true,
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -348,7 +336,6 @@
             "film_price_gAwBxJ",
             "film_details_xnh4we",
             "group_icgrde",
-            "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "film_buy_note_FTbGAe",
@@ -369,6 +356,13 @@
         "background_color": "",
         "padding-block-start": 0,
         "padding-block-end": 0
+      }
+    },
+    "product_archive_note_KcjreR": {
+      "type": "product-archive-note",
+      "name": "Product archive note",
+      "settings": {
+        "label": "Why it belongs on your shelf"
       }
     },
     "product_recommendations_qggXJq": {
@@ -519,6 +513,7 @@
   "order": [
     "archive_back_link_AebwFt",
     "main",
+    "product_archive_note_KcjreR",
     "product_recommendations_qggXJq"
   ]
 }
