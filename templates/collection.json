@@ -272,12 +272,21 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "archive_note_JtrRXk": {
+      "type": "archive-note",
+      "name": "Archive note",
+      "settings": {
+        "label": "Archive note 04",
+        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
+      }
     }
   },
   "order": [
     "section",
     "collection_hero_38rk4q",
     "collection_toolbar_bXeaif",
+    "archive_note_JtrRXk",
     "main"
   ]
 }

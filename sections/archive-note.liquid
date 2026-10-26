@@ -1,0 +1,95 @@
+{% comment %}
+  Archive note: a short editorial quote between two rules, with a small label to the left.
+  Every field is optional; the section is not rendered when both are empty.
+{% endcomment %}
+
+{% liquid
+  assign label = section.settings.label
+  assign quote = section.settings.quote
+%}
+
+{% if label != blank or quote != blank %}
+  <section class="archive-note">
+    <div class="archive-note__inner">
+      {% if label != blank %}
+        <p class="archive-note__label">{{ label | escape }}</p>
+      {% endif %}
+
+      {% if quote != blank %}
+        <p class="archive-note__quote">{{ quote | escape }}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .archive-note {
+    --archive-ink: #191919;
+
+    padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-ink);
+  }
+
+  .archive-note__inner {
+    display: grid;
+    gap: 1rem;
+    max-width: 64rem;
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+    border-block: 2px solid var(--archive-ink);
+  }
+
+  .archive-note p {
+    margin: 0;
+  }
+
+  .archive-note__label {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-note__quote {
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.15;
+  }
+
+  @media screen and (min-width: 750px) {
+    .archive-note__inner {
+      grid-template-columns: minmax(8rem, 1fr) minmax(0, 3.2fr);
+      gap: 2rem;
+    }
+
+    .archive-note__label {
+      padding-block-start: 0.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Archive note",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Archive note 04"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Archive note"
+    }
+  ]
+}
+{% endschema %}
