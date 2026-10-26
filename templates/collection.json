@@ -109,6 +109,14 @@
         "description": "<p>A growing collection of second-hand films, each inspected, indexed and ready to be watched again.</p>"
       }
     },
+    "archive_note_JtrRXk": {
+      "type": "archive-note",
+      "name": "Archive note",
+      "settings": {
+        "label": "Archive note 04",
+        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
+      }
+    },
     "collection_toolbar_bXeaif": {
       "type": "collection-toolbar",
       "name": "Collection toolbar",
@@ -116,14 +124,6 @@
         "all_label": "All formats",
         "filter_label": "Filter by format",
         "sort_label": "Sort by"
-      }
-    },
-    "archive_note_JtrRXk": {
-      "type": "archive-note",
-      "name": "Archive note",
-      "settings": {
-        "label": "Archive note 04",
-        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
       }
     },
     "main": {
@@ -287,8 +287,8 @@
   "order": [
     "section",
     "collection_hero_38rk4q",
-    "collection_toolbar_bXeaif",
     "archive_note_JtrRXk",
+    "collection_toolbar_bXeaif",
     "main"
   ]
 }
