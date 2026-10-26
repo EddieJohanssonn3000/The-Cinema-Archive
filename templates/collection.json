@@ -118,6 +118,14 @@
         "sort_label": "Sort by"
       }
     },
+    "archive_note_JtrRXk": {
+      "type": "archive-note",
+      "name": "Archive note",
+      "settings": {
+        "label": "Archive note 04",
+        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
+      }
+    },
     "main": {
       "type": "main-collection",
       "blocks": {
@@ -188,6 +196,7 @@
             "product_title_4nY4eT": {
               "type": "product-title",
               "name": "t:names.product_title",
+              "disabled": true,
               "settings": {
                 "width": "100%",
                 "max_width": "normal",
@@ -212,6 +221,7 @@
             },
             "price_EzJzMm": {
               "type": "price",
+              "disabled": true,
               "settings": {
                 "show_sale_price_first": true,
                 "show_installments": false,
@@ -263,7 +273,7 @@
         "enable_infinite_scroll": true,
         "products_per_page": 24,
         "product_grid_width": "centered",
-        "full_width_on_mobile": true,
+        "full_width_on_mobile": false,
         "columns_gap_horizontal": 16,
         "columns_gap_vertical": 24,
         "padding-inline-start": 0,
@@ -271,14 +281,6 @@
         "background_color": "",
         "padding-block-start": 0,
         "padding-block-end": 32
-      }
-    },
-    "archive_note_JtrRXk": {
-      "type": "archive-note",
-      "name": "Archive note",
-      "settings": {
-        "label": "Archive note 04",
-        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
       }
     }
   },
