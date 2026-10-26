@@ -69,6 +69,7 @@
         "text_tqQTNE",
         "text_twGGkJ"
       ],
+      "disabled": true,
       "name": "t:names.heading",
       "settings": {
         "content_direction": "column",
@@ -97,6 +98,15 @@
         "border_radius": 0,
         "padding-block-start": 48,
         "padding-block-end": 48
+      }
+    },
+    "collection_hero_38rk4q": {
+      "type": "collection-hero",
+      "name": "Collection hero",
+      "settings": {
+        "label": "The complete index / 001-[count]",
+        "heading": "<p>The film</p><p><em>archive</em></p>",
+        "description": "<p>A growing collection of second-hand films, each inspected, indexed and ready to be watched again.</p>"
       }
     },
     "main": {
@@ -257,6 +267,7 @@
   },
   "order": [
     "section",
+    "collection_hero_38rk4q",
     "main"
   ]
 }
