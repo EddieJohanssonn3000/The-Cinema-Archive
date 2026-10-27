@@ -16,7 +16,23 @@
   style="{% render 'spacing-style', settings: section.settings %}"
 >
   <div class="directors-overview">
-    <h1 class="directors-overview__heading">{{ section.settings.heading | escape }}</h1>
+    {% comment %} Without a visible heading the page still gets an h1 for screen readers {% endcomment %}
+    {% if section.settings.heading != blank %}
+      <h1 class="directors-overview__heading">{{ section.settings.heading | escape }}</h1>
+    {% else %}
+      <h1 class="visually-hidden">{{ page.title | escape }}</h1>
+    {% endif %}
+
+    {% if section.settings.note_quote != blank %}
+      <div class="directors-overview__note">
+        {% render 'quote-box',
+          quote: section.settings.note_quote,
+          label: section.settings.note_label,
+          author: section.settings.note_author,
+          color: section.settings.note_color
+        %}
+      </div>
+    {% endif %}
 
     {% if directors.size > 0 %}
       <ul class="directors-overview__grid" role="list">
@@ -25,6 +41,14 @@
             assign director_name = director.name.value
             assign portrait = director.portrait.value
             assign portrait_alt = portrait.alt | default: director_name
+
+            # Count this director's films (first 50 products, as on the director page)
+            assign director_film_count = 0
+            for film in collections.all.products limit: 50
+              if film.metafields.custom.director.value.system.id == director.system.id
+                assign director_film_count = director_film_count | plus: 1
+              endif
+            endfor
           %}
           <li class="director-card">
             {% if director.system.url != blank %}
@@ -52,6 +76,13 @@
 
               <span class="director-card__name">{{ director_name | escape }}</span>
 
+              {% if director_film_count > 0 %}
+                <span class="director-card__tag">
+                  {{- director_film_count }}
+                  {% if director_film_count == 1 %}film{% else %}films{% endif %} in the archive
+                </span>
+              {% endif %}
+
             {% if director.system.url != blank %}
               </a>
             {% else %}
@@ -71,6 +102,15 @@
     margin-block: 0 2rem;
   }
 
+  .directors-overview__note {
+    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  /* A little less space inside the quote box on this page only */
+  .directors-overview__note .quote-box {
+    padding: clamp(2.25rem, 4.5vw, 4.5rem) clamp(1.5rem, 6%, 6rem) clamp(2rem, 4vw, 4rem);
+  }
+
   .directors-overview__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -84,20 +124,21 @@
     margin: 0;
   }
 
+  /* Director cards follow the film cards (snippets/film-card.liquid) */
   .director-card__link {
     display: block;
-    color: inherit;
+    color: #191919;
     text-decoration: none;
   }
 
   .director-card__portrait {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 2 / 3;
     overflow: hidden;
-    border: 2px solid var(--color-foreground);
+    border: 2px solid #191919;
   }
 
   .director-card__portrait--empty {
-    background: rgb(var(--color-foreground-rgb) / 0.08);
+    background: rgb(25 25 25 / 0.08);
   }
 
   .director-card__image {
@@ -109,25 +150,42 @@
 
   .director-card__name {
     display: block;
-    margin-block-start: 0.75rem;
+    margin-block-start: 1rem;
     font-family: var(--font-heading--family);
-    font-size: 1.25rem;
+    font-size: clamp(1.3rem, 2vw, 2rem);
+    line-height: 1.05;
+  }
+
+  .director-card__tag {
+    display: inline-block;
+    margin-block-start: 0.9rem;
+    padding: 0.35em 0.6em;
+    border: 1.5px solid #191919;
+    font-family: var(--font-accent--family);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   a.director-card__link:hover .director-card__name,
   a.director-card__link:focus-visible .director-card__name {
     text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-underline-offset: 0.12em;
   }
 
   @media screen and (min-width: 750px) {
     .directors-overview__grid {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 2.5rem 1.5rem;
     }
+  }
 
-    .director-card__name {
-      font-size: 1.5rem;
+  @media screen and (min-width: 990px) {
+    .directors-overview__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3rem 2rem;
     }
   }
 {% endstylesheet %}
@@ -147,6 +205,53 @@
       "id": "empty_text",
       "label": "Text when no directors are found",
       "default": "No directors have been added to the archive yet."
+    },
+    {
+      "type": "header",
+      "content": "Archive note"
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Label",
+      "default": "Archive note 05"
+    },
+    {
+      "type": "textarea",
+      "id": "note_quote",
+      "label": "Quote",
+      "info": "Shown in a coloured box between the heading and the directors. Leave empty to hide it.",
+      "default": "Every director leaves fingerprints on the frame. Follow them from one film to the next."
+    },
+    {
+      "type": "text",
+      "id": "note_author",
+      "label": "Author",
+      "info": "Optional. \"— \" is added in front."
+    },
+    {
+      "type": "select",
+      "id": "note_color",
+      "label": "Box colour",
+      "options": [
+        {
+          "value": "lilac",
+          "label": "Lilac"
+        },
+        {
+          "value": "red",
+          "label": "Red"
+        },
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        },
+        {
+          "value": "blue",
+          "label": "Blue"
+        }
+      ],
+      "default": "lilac"
     },
     {
       "type": "header",

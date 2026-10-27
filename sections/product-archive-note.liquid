@@ -1,5 +1,5 @@
 {% comment %}
-  Product archive note: a red box with a quote about the film and who wrote it.
+  Product archive note: a red quote box (snippets/quote-box.liquid) about the film and who wrote it.
   The quote and author come from the product metafields custom.archive_note (multi-line text)
   and custom.archive_note_author (single line text), so every film has its own note.
   Nothing is rendered when the product has no note.
@@ -12,21 +12,7 @@
 
 {% if note != blank %}
   <section class="product-archive-note">
-    <figure class="product-archive-note__box">
-      <span class="product-archive-note__mark" aria-hidden="true">“</span>
-
-      {% if section.settings.label != blank %}
-        <p class="product-archive-note__label">{{ section.settings.label | escape }}</p>
-      {% endif %}
-
-      <blockquote class="product-archive-note__quote">
-        <p>{{ note | escape | newline_to_br }}</p>
-      </blockquote>
-
-      {% if note_author != blank %}
-        <figcaption class="product-archive-note__author">— {{ note_author | escape }}</figcaption>
-      {% endif %}
-    </figure>
+    {% render 'quote-box', quote: note, label: section.settings.label, author: note_author, color: 'red' %}
   </section>
 {% elsif request.design_mode %}
   <section class="product-archive-note product-archive-note--empty">
@@ -36,61 +22,8 @@
 
 {% stylesheet %}
   .product-archive-note {
-    --archive-ink: #191919;
-    --archive-red: #e94b35;
-    --archive-yellow: #f2d46d;
-
     padding: clamp(2.5rem, 5vw, 5rem) clamp(1.5rem, 4vw, 3.75rem);
-    color: var(--archive-ink);
-  }
-
-  .product-archive-note__box {
-    position: relative;
-    margin: 0;
-    padding: clamp(3rem, 7vw, 7rem) clamp(1.5rem, 8%, 8rem) clamp(2.5rem, 6vw, 6rem);
-    background: var(--archive-red);
-    border: 2px solid var(--archive-ink);
-  }
-
-  .product-archive-note p {
-    margin: 0;
-  }
-
-  .product-archive-note__mark {
-    position: absolute;
-    top: -0.1em;
-    right: clamp(1rem, 4vw, 4rem);
-    color: var(--archive-yellow);
-    font-family: var(--font-heading--family);
-    font-size: clamp(5rem, 10vw, 10rem);
-    line-height: 1;
-  }
-
-  .product-archive-note__label {
-    margin-block-end: 1rem;
-    font-family: var(--font-accent--family);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .product-archive-note__quote {
-    max-width: 46ch;
-    margin: 0;
-    font-family: var(--font-heading--family);
-    font-size: clamp(1.5rem, 2.8vw, 2.75rem);
-    font-weight: var(--font-heading--weight);
-    line-height: 1.05;
-  }
-
-  .product-archive-note__author {
-    margin-block-start: clamp(1.25rem, 2.5vw, 2rem);
-    font-family: var(--font-accent--family);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    color: #191919;
   }
 
   .product-archive-note--empty {

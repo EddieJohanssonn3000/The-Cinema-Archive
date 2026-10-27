@@ -23,12 +23,7 @@
       {% if product.metafields.custom.director.value.system.id == director.system.id %}
         {% assign film_count = film_count | plus: 1 %}
         <li class="director-filmography__item">
-          {% content_for 'block',
-            type: '_product-card',
-            id: 'static-product-card',
-            closest.product: product,
-            product_view_context: 'collection'
-          %}
+          {% render 'film-card', product: product, sizes: '(min-width: 750px) 25vw, 50vw' %}
         </li>
       {% endif %}
     {% endfor %}
