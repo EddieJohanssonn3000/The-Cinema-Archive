@@ -44,7 +44,9 @@
     --archive-blue: #3155e8;
     --archive-yellow: #f2d46d;
     position: relative;
-    min-height: min(48rem, calc(100svh - var(--header-group-height, 0px)));
+    /* Fixed height (not tied to the window height) so the hero looks the same in a
+       normal window and in full screen, and always fits the text and button */
+    min-height: 42rem;
     padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 4vw, 3.75rem);
     color: var(--archive-ink);
     background: var(--archive-cream);
@@ -127,10 +129,12 @@
     transform: rotate(-1deg);
   }
 
+  /* Placed from the top, so it overlaps the yellow panel by the same amount
+     whatever the window height */
   .archive-introduction__supporting-content {
     position: absolute;
+    top: 17rem;
     right: 3.9rem;
-    bottom: 3rem;
     z-index: 3;
     width: min(32rem, 38%);
   }
@@ -197,6 +201,7 @@
 
     .archive-introduction__supporting-content {
       position: relative;
+      top: auto;
       right: auto;
       bottom: auto;
       width: 100%;
