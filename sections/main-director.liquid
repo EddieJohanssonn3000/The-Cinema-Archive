@@ -1,8 +1,10 @@
 {% comment %}
-  Director page for the Directors metaobject (templates/metaobject/directors.json).
+  Filmography for the Directors metaobject page (templates/metaobject/directors.json):
+  "Films by <director> in the archive" with film cards. The portrait and biography are shown by
+  the sections director-hero and director-portrait.
   `metaobject` is the director entry being viewed.
 
-  Filmography: products reference their director through the product metafield `custom.director`.
+  Products reference their director through the product metafield `custom.director`.
   Liquid has no reverse lookup, so we scan the store's products and keep those whose director
   matches this entry. Limitation: only the first 50 products of `collections.all` are scanned
   (Shopify's documented per-page limit for collection products), so films beyond that are not
@@ -12,9 +14,12 @@
 {% liquid
   assign director = metaobject
   assign director_name = director.name.value
-  assign portrait = director.portrait.value
-  assign portrait_alt = portrait.alt | default: director_name
   assign film_count = 0
+
+  # [director] in the heading becomes the director's name in red italics.
+  # Escape the name on its own first, so the span tag itself is not escaped.
+  assign name_escaped = director_name | escape
+  assign name_html = '<span class="director-filmography__name">' | append: name_escaped | append: '</span>'
 %}
 
 {% capture film_cards %}
@@ -34,83 +39,53 @@
   class="section section--page-width spacing-style"
   style="{% render 'spacing-style', settings: section.settings %}"
 >
-  <div class="director-page">
-    <div class="director-profile{% if portrait == blank %} director-profile--no-portrait{% endif %}">
-      {% if portrait != blank %}
-        <div class="director-profile__portrait">
-          {{
-            portrait
-            | image_url: width: 1200
-            | image_tag:
-              widths: '300, 450, 600, 900, 1200',
-              sizes: '(min-width: 750px) 33vw, 100vw',
-              alt: portrait_alt
-          }}
-        </div>
-      {% endif %}
+  <div class="director-filmography">
+    {% if section.settings.heading != blank %}
+      <h2 class="director-filmography__heading">
+        {{- section.settings.heading | escape | replace: '[director]', name_html -}}
+      </h2>
+    {% endif %}
 
-      <div class="director-profile__content">
-        <h1 class="director-profile__name">{{ director_name | escape }}</h1>
-
-        {% if director.biography != blank %}
-          <div class="director-profile__biography rte">
-            {{ director.biography | metafield_tag }}
-          </div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="director-filmography">
-      <h2 class="director-filmography__heading">{{ section.settings.filmography_heading | escape }}</h2>
-
-      {% if film_count > 0 %}
-        <ul class="director-filmography__grid" role="list">
-          {{ film_cards }}
-        </ul>
-      {% else %}
-        <p class="director-filmography__empty">{{ section.settings.empty_text | escape }}</p>
-      {% endif %}
-    </div>
+    {% if film_count > 0 %}
+      <ul class="director-filmography__grid" role="list">
+        {{ film_cards }}
+      </ul>
+    {% else %}
+      <p class="director-filmography__empty">{{ section.settings.empty_text | escape }}</p>
+    {% endif %}
   </div>
 </div>
 
 {% stylesheet %}
-  .director-page {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
-  .director-profile {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .director-profile__portrait img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .director-profile__name {
-    margin-block: 0 1rem;
-  }
-
-  .director-profile__biography {
-    max-width: 65ch;
+  .director-filmography {
+    color: #191919;
   }
 
   .director-filmography__heading {
-    margin-block: 0 1.5rem;
+    margin-block: 0 clamp(1.5rem, 3vw, 2.5rem);
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.75rem, 3.5vw, 3.25rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .director-filmography__name {
+    color: #e94b35;
+    font-style: italic;
   }
 
   .director-filmography__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 1rem;
+    gap: 2rem 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .director-filmography__item {
+    min-width: 0;
   }
 
   .director-filmography__empty {
@@ -118,32 +93,30 @@
   }
 
   @media screen and (min-width: 750px) {
-    .director-profile {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      gap: 3rem;
-      align-items: start;
-    }
-
-    .director-profile--no-portrait {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
     .director-filmography__grid {
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 2rem 1.5rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem 1.5rem;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .director-filmography__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3rem 2rem;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Director",
+  "name": "Director filmography",
   "settings": [
     {
       "type": "text",
-      "id": "filmography_heading",
-      "label": "Filmography heading",
-      "default": "Filmography"
+      "id": "heading",
+      "label": "Heading",
+      "info": "[director] is replaced with the director's name.",
+      "default": "Films by [director] in the archive"
     },
     {
       "type": "text",

@@ -1,0 +1,157 @@
+{% comment %}
+  Director portrait text for the Directors metaobject page: a small label, a large lead text
+  (metaobject field `lead`, multi-line text) and the biography (`biography`, rich text).
+  Nothing is rendered when both the lead and the biography are empty.
+{% endcomment %}
+
+{% liquid
+  assign director = metaobject
+  assign lead = director.lead.value
+%}
+
+{% if lead != blank or director.biography != blank %}
+  <section class="director-portrait director-portrait--{{ section.settings.color | default: 'ink' }}">
+    {% if section.settings.label != blank %}
+      <p class="director-portrait__label">{{ section.settings.label | escape }}</p>
+    {% endif %}
+
+    {% if lead != blank %}
+      <p class="director-portrait__lead">{{ lead | escape | newline_to_br }}</p>
+    {% endif %}
+
+    {% if director.biography != blank %}
+      <div class="director-portrait__biography">
+        {{ director.biography | metafield_tag }}
+      </div>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  /* Colour options: background, text and lead colour */
+  .director-portrait--ink {
+    --portrait-background: #191919;
+    --portrait-text: #f5eedc;
+    --portrait-lead: #f2d46d;
+  }
+
+  .director-portrait--cream {
+    --portrait-background: transparent;
+    --portrait-text: #191919;
+    --portrait-lead: #3155e8;
+  }
+
+  .director-portrait--yellow {
+    --portrait-background: #f2d46d;
+    --portrait-text: #191919;
+    --portrait-lead: #191919;
+  }
+
+  .director-portrait--blue {
+    --portrait-background: #3155e8;
+    --portrait-text: #f5eedc;
+    --portrait-lead: #f2d46d;
+  }
+
+  .director-portrait {
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(3rem, 7vw, 6.5rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--portrait-text, #191919);
+    background: var(--portrait-background, transparent);
+  }
+
+  .director-portrait a {
+    color: inherit;
+  }
+
+  .director-portrait__label {
+    margin: 0;
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .director-portrait__lead {
+    margin: 0;
+    color: var(--portrait-lead, inherit);
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  .director-portrait__biography {
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    line-height: 1.4;
+  }
+
+  .director-portrait__biography p {
+    margin: 0 0 1em;
+  }
+
+  .director-portrait__biography p:last-child {
+    margin-block-end: 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .director-portrait {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 2.2fr) minmax(0, 1.6fr);
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    .director-portrait__label {
+      padding-block-start: 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Director portrait",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "01 / Portrait"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "ink",
+          "label": "Ink (black, yellow lead)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream (blue lead)"
+        },
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        },
+        {
+          "value": "blue",
+          "label": "Blue (yellow lead)"
+        }
+      ],
+      "default": "ink"
+    },
+    {
+      "type": "paragraph",
+      "content": "The lead text and biography come from the director's metaobject fields lead and biography."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Director portrait"
+    }
+  ]
+}
+{% endschema %}
