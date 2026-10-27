@@ -53,19 +53,23 @@
         # Runtime is stored as minutes, e.g. 99 is shown as "1 h 39 min"
         assign runtime_hours = runtime | divided_by: 60
         assign runtime_minutes = runtime | modulo: 60
+
+        # Build the text in one string so whitespace control cannot drop the spaces
+        assign runtime_text = ''
+        if runtime_hours > 0
+          assign runtime_text = runtime_hours | append: ' h'
+        endif
+        if runtime_minutes > 0
+          if runtime_text != ''
+            assign runtime_text = runtime_text | append: ' '
+          endif
+          assign runtime_text = runtime_text | append: runtime_minutes | append: ' min'
+        endif
       %}
       <div class="film-details__item">
         <dt class="film-details__label">Runtime</dt>
         <dd class="film-details__value">
-          <time datetime="PT{{ runtime }}M">
-            {%- if runtime_hours > 0 -%}
-              {{ runtime_hours }} h
-            {%- endif -%}
-            {%- if runtime_hours > 0 and runtime_minutes > 0 %} {% endif -%}
-            {%- if runtime_minutes > 0 -%}
-              {{ runtime_minutes }} min
-            {%- endif -%}
-          </time>
+          <time datetime="PT{{ runtime }}M">{{ runtime_text }}</time>
         </dd>
       </div>
     {% endif %}
