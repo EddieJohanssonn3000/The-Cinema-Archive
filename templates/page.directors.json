@@ -16,7 +16,9 @@
         "empty_text": "No directors have been added to the archive yet.",
         "note_label": "Archive note 05",
         "note_quote": "Every director leaves fingerprints on the frame. Follow them from one film to the next.",
-        "padding-block-start": 16,
+        "note_author": "archive employee",
+        "note_color": "lilac",
+        "padding-block-start": 30,
         "padding-block-end": 48
       }
     }
