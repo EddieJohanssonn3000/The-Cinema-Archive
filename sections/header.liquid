@@ -1444,6 +1444,44 @@
     }
   }
 
+  /* Customer accounts are not used: hide the account icon on every screen size */
+  #header-component header-actions .account-button {
+    display: none;
+  }
+
+  /* Ink instead of the theme's blue for the header icons and the mobile menu drawer */
+  #header-component .header__row--top,
+  #header-component .menu-drawer {
+    --color-foreground: #191919;
+    --color-foreground-rgb: 25 25 25;
+  }
+
+  /* Mobile menu drawer in the archive style */
+  #header-component .menu-drawer {
+    background-color: #f5eedc;
+    border-inline-end: 2px solid #191919;
+  }
+
+  #header-component .menu-drawer .menu-drawer__menu-item--mainlist {
+    padding: 1rem 0;
+    color: #191919;
+    border-block-end: 1px solid #191919;
+    font-family: var(--font-body--family);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  #header-component .menu-drawer .menu-drawer__menu-item--mainlist[aria-current='page'] {
+    padding-inline: 0.75rem;
+    background-color: #f2d46d;
+  }
+
+  /* Featured products under the links are not part of the design */
+  #header-component .menu-drawer .menu-drawer__featured-content {
+    display: none;
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
