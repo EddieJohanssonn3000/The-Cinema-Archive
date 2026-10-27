@@ -59,6 +59,18 @@
     object-fit: cover;
   }
 
+  /* Horizon lets posters run edge to edge on mobile when the grid is full width
+     (negative margins on the gallery). Keep them inside the page margin instead. */
+  @media screen and (max-width: 749px) {
+    .collection-wrapper--full-width .product-grid {
+      padding-inline: var(--page-margin);
+    }
+
+    .collection-wrapper--full-width .product-grid .card-gallery {
+      margin-inline: 0;
+    }
+  }
+
   .film-card-info {
     --archive-ink: #191919;
 
