@@ -158,6 +158,7 @@
 
   .director-card__tag {
     display: inline-block;
+    max-width: 100%;
     margin-block-start: 0.9rem;
     padding: 0.35em 0.6em;
     border: 1.5px solid #191919;
@@ -182,7 +183,8 @@
     }
   }
 
-  @media screen and (min-width: 990px) {
+  /* Five columns only from 1200px, so the film-count tag fits on one line */
+  @media screen and (min-width: 1200px) {
     .directors-overview__grid {
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 3rem 1.75rem;
