@@ -83,6 +83,15 @@
       grid-column: 2 / 3;
     }
   }
+
+  /* On large screens the portrait poster grows very tall; cap the gallery width
+     and centre it in its column. */
+  @media screen and (min-width: 990px) {
+    .product-information .product-information__media media-gallery {
+      max-width: 40rem;
+      margin-inline: auto;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}

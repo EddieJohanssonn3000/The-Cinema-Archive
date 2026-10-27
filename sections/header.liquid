@@ -1263,15 +1263,17 @@
       margin-inline: 0;
     }
 
+    /* Edge to edge on every screen width: span all columns of the section grid
+       (left margin, content, right margin) instead of shifting the row sideways. */
     #header-component .header__row--top .header__columns {
       --header-template-columns: 24% 40% 36%;
+      grid-column: 1 / -1;
       grid-template-areas: 'left center right';
       column-gap: 0;
       height: 80px;
       min-height: 80px;
-      width: 100vw !important;
+      width: auto;
       margin-inline: 0 !important;
-      transform: translateX(calc(0px - var(--page-margin)));
       padding: 0 !important;
     }
 
