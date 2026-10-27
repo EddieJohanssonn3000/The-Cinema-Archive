@@ -196,10 +196,13 @@
   }
 
   @media screen and (min-width: 990px) {
+    /* On wide screens the side padding grows so the content never exceeds 90rem;
+       the lilac background still runs edge to edge */
     .director-focus {
       grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.8fr);
       align-items: center;
       gap: clamp(2rem, 4vw, 4rem);
+      padding-inline: max(clamp(1.5rem, 4vw, 3.75rem), calc((100% - 90rem) / 2));
     }
 
     .director-focus__number {
