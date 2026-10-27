@@ -1,8 +1,8 @@
 {% comment %}
   Featured films: homepage film selection.
   Intro (label, large heading, description) followed by film cards from a collection.
-  Cards read the product metafields custom.director (Director metaobject reference),
-  custom.release_year, custom.format and custom.condition. Empty values are not rendered.
+  The cards are snippets/film-card.liquid (shared with the director pages and
+  "More from the director"); this section only sets the grid and the staggered layout.
 {% endcomment %}
 
 {% liquid
@@ -35,54 +35,8 @@
   {% if film_collection.products.size > 0 %}
     <ul class="featured-films__grid" role="list">
       {% for product in film_collection.products limit: max_films %}
-        {% liquid
-          assign image = product.featured_image
-          assign director_name = product.metafields.custom.director.value.name.value
-          assign release_year = product.metafields.custom.release_year.value
-          assign film_format = product.metafields.custom.format.value
-          assign film_condition = product.metafields.custom.condition.value
-        %}
-        <li class="film-card">
-          <a class="film-card__link" href="{{ product.url }}">
-            <div class="film-card__poster{% if image == blank %} film-card__poster--empty{% endif %}">
-              {% if image != blank %}
-                {{
-                  image
-                  | image_url: width: 900
-                  | image_tag:
-                    class: 'film-card__image',
-                    widths: '300, 450, 600, 900',
-                    sizes: '(min-width: 990px) 25vw, 50vw',
-                    alt: image.alt | default: product.title,
-                    loading: 'lazy'
-                }}
-              {% endif %}
-            </div>
-
-            <div class="film-card__header">
-              <h3 class="film-card__title">{{ product.title | escape }}</h3>
-              <span class="film-card__price">{{ product.price | money }}</span>
-            </div>
-
-            {% if director_name != blank or release_year != blank %}
-              <p class="film-card__meta">
-                {{- director_name | escape -}}
-                {%- if director_name != blank and release_year != blank %} · {% endif -%}
-                {{- release_year -}}
-              </p>
-            {% endif %}
-
-            {% if film_format != blank or film_condition != blank %}
-              <div class="film-card__tags">
-                {% if film_format != blank %}
-                  <span class="film-card__tag">{{ film_format | escape }}</span>
-                {% endif %}
-                {% if film_condition != blank %}
-                  <span class="film-card__tag">{{ film_condition | escape }}</span>
-                {% endif %}
-              </div>
-            {% endif %}
-          </a>
+        <li class="featured-films__item">
+          {% render 'film-card', product: product %}
         </li>
       {% endfor %}
     </ul>
@@ -168,73 +122,8 @@
     list-style: none;
   }
 
-  .film-card__link {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .film-card__poster {
-    aspect-ratio: 2 / 3;
-    overflow: hidden;
-    border: 2px solid var(--archive-ink);
-  }
-
-  .film-card__poster--empty {
-    background: rgb(25 25 25 / 0.08);
-  }
-
-  .film-card__image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .film-card__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-block-start: 1rem;
-  }
-
-  .film-card__title {
-    margin: 0;
-    font-family: var(--font-heading--family);
-    font-size: clamp(1.3rem, 2vw, 2rem);
-    font-weight: var(--font-heading--weight);
-    line-height: 1.05;
-  }
-
-  .film-card__price {
-    flex: 0 0 auto;
-    font-family: var(--font-accent--family);
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
-  .film-card__meta {
-    margin: 0.4rem 0 0;
-    font-size: clamp(1rem, 1.3vw, 1.2rem);
-  }
-
-  .film-card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-block-start: 1rem;
-  }
-
-  .film-card__tag {
-    padding: 0.35em 0.6em;
-    border: 1.5px solid var(--archive-ink);
-    font-family: var(--font-accent--family);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    text-transform: uppercase;
+  .featured-films__item {
+    min-width: 0;
   }
 
   .featured-films__button {
@@ -266,21 +155,16 @@
     font-weight: 400;
   }
 
-  .film-card__link:hover .film-card__title,
-  .film-card__link:focus-visible .film-card__title {
-    text-decoration: underline;
-    text-underline-offset: 0.12em;
-  }
-
   @media screen and (min-width: 990px) {
+    /* Wider gaps make the four cards a little narrower */
     .featured-films__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 3rem 2rem;
+      gap: 3rem clamp(2.5rem, 5vw, 5rem);
     }
 
     /* Staggered layout: every second card starts lower. Padding (not transform)
        so the row grows and following content is never overlapped. */
-    .film-card:nth-child(even) {
+    .featured-films__item:nth-child(even) {
       padding-block-start: clamp(4rem, 8vw, 8rem);
     }
 

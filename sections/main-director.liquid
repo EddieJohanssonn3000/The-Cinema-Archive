@@ -92,6 +92,25 @@
     margin: 0;
   }
 
+  /* Mobile: one swipeable row instead of a grid (CSS scroll snap, no JavaScript).
+     Cards are 45% wide so the next card peeks in and shows that the row can be swiped.
+     Same approach as sections/product-director-films.liquid. */
+  @media screen and (max-width: 749px) {
+    .director-filmography__grid {
+      display: flex;
+      gap: 1rem;
+      padding-block-end: 0.75rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+    }
+
+    .director-filmography__item {
+      flex: 0 0 45%;
+      scroll-snap-align: start;
+    }
+  }
+
   @media screen and (min-width: 750px) {
     .director-filmography__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -101,8 +120,8 @@
 
   @media screen and (min-width: 990px) {
     .director-filmography__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 3rem 2rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 3rem 1.75rem;
     }
   }
 {% endstylesheet %}
