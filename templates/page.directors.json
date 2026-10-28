@@ -1,0 +1,29 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-directors",
+      "settings": {
+        "heading": "",
+        "empty_text": "No directors have been added to the archive yet.",
+        "note_label": "Archive note 05",
+        "note_quote": "Every director leaves fingerprints on the frame. Follow them from one film to the next.",
+        "note_author": "archive employee",
+        "note_color": "lilac",
+        "padding-block-start": 30,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

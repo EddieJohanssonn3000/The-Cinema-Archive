@@ -9,6 +9,14 @@
  */
 {
   "sections": {
+    "archive_back_link_AebwFt": {
+      "type": "archive-back-link",
+      "name": "Back link",
+      "settings": {
+        "label": "Back to archive",
+        "link": "shopify://collections/all"
+      }
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -86,9 +94,32 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "film_title_djhnPL": {
+              "type": "film-title",
+              "name": "Film title",
+              "settings": {
+                "show_description": true
+              },
+              "blocks": {}
+            },
+            "film_price_gAwBxJ": {
+              "type": "film-price",
+              "name": "Film price",
+              "settings": {
+                "badge_label": "Only one copy"
+              },
+              "blocks": {}
+            },
+            "film_details_xnh4we": {
+              "type": "film-details",
+              "name": "Film details",
+              "settings": {},
+              "blocks": {}
+            },
             "group_icgrde": {
               "type": "group",
               "name": "t:names.header",
+              "disabled": true,
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -180,19 +211,6 @@
                 "price_tVjtKg"
               ]
             },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "divider_color": "{{ settings.color_palette.color3 }}",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -244,6 +262,7 @@
               "blocks": {
                 "quantity": {
                   "type": "quantity",
+                  "disabled": true,
                   "static": true,
                   "settings": {
                     "input_style": "default",
@@ -268,6 +287,7 @@
                 },
                 "accelerated-checkout": {
                   "type": "accelerated-checkout",
+                  "disabled": true,
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -275,9 +295,18 @@
               },
               "block_order": []
             },
+            "film_buy_note_FTbGAe": {
+              "type": "film-buy-note",
+              "name": "Film buy note",
+              "settings": {
+                "text": "Checked by hand · Ships in 1–2 days · Plastic-free packaging"
+              },
+              "blocks": {}
+            },
             "text_aEtTtq": {
               "type": "text",
               "name": "t:names.product_description",
+              "disabled": true,
               "settings": {
                 "text": "{{ closest.product.description }}",
                 "width": "100%",
@@ -300,21 +329,17 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "film_details_xnh4we": {
-              "type": "film-details",
-              "name": "Film details",
-              "settings": {},
-              "blocks": {}
             }
           },
           "block_order": [
+            "film_title_djhnPL",
+            "film_price_gAwBxJ",
+            "film_details_xnh4we",
             "group_icgrde",
-            "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq",
-            "film_details_xnh4we"
+            "film_buy_note_FTbGAe",
+            "text_aEtTtq"
           ]
         }
       },
@@ -331,6 +356,13 @@
         "background_color": "",
         "padding-block-start": 0,
         "padding-block-end": 0
+      }
+    },
+    "product_archive_note_KcjreR": {
+      "type": "product-archive-note",
+      "name": "Product archive note",
+      "settings": {
+        "label": "Why it belongs on your shelf"
       }
     },
     "product_recommendations_qggXJq": {
@@ -476,10 +508,22 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "product_director_films_m8hWyr": {
+      "type": "product-director-films",
+      "name": "More from the director",
+      "settings": {
+        "label": "",
+        "heading": "More from [director] in the archive",
+        "max_products": 4
+      }
     }
   },
   "order": [
+    "archive_back_link_AebwFt",
     "main",
-    "product_recommendations_qggXJq"
+    "product_archive_note_KcjreR",
+    "product_recommendations_qggXJq",
+    "product_director_films_m8hWyr"
   ]
 }

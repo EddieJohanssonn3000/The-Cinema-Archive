@@ -49,21 +49,31 @@
     assign inverse_logo_style = '--header-logo-image-width: ' | append: inverse_logo_width | append: 'px;' | append: '--header-logo-image-width-mobile: ' | append: inverse_logo_width_mobile | append: 'px; --header-logo-image-height: ' | append: settings.logo_height | append: 'px; --header-logo-image-height-mobile: ' | append: settings.logo_height_mobile | append: 'px;'
   %}
 
-  <span
-    {% if use_inverse_logo %}
-      class="header-logo__solid-header-image-container"
-    {% endif %}
-    data-testid="header-logo"
-  >
-    {% render 'image',
-      image: settings.logo,
-      class: 'header-logo__image',
-      height: settings.logo_height,
-      alt_text_fallback: alt_text_fallback,
-      text_fallback: shop.name,
-      style: logo_style
-    %}
-  </span>
+  {% if settings.logo != blank %}
+    <span
+      {% if use_inverse_logo %}
+        class="header-logo__solid-header-image-container"
+      {% endif %}
+      data-testid="header-logo"
+    >
+      {% render 'image',
+        image: settings.logo,
+        class: 'header-logo__image',
+        height: settings.logo_height,
+        alt_text_fallback: alt_text_fallback,
+        text_fallback: shop.name,
+        style: logo_style
+      %}
+    </span>
+  {% else %}
+    <span class="header-logo__lockup" data-testid="header-logo">
+      <span class="header-logo__wordmark">
+        <span>THE CINEMA</span>
+        <strong>Archive</strong>
+      </span>
+      <span class="header-logo__code">A-24</span>
+    </span>
+  {% endif %}
 
   {% if use_inverse_logo %}
     <span
@@ -129,6 +139,43 @@
       height: var(--header-logo-image-height);
       width: var(--header-logo-image-width);
     }
+  }
+
+  .header-logo__wordmark {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: currentcolor;
+    font-family: var(--font-body--family);
+    font-size: clamp(0.85rem, 1.2vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 0.95;
+  }
+
+  .header-logo__wordmark strong {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.3rem, 3.5vw, 4rem);
+    font-weight: var(--font-heading--weight);
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-transform: none;
+  }
+
+  .header-logo__lockup {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  }
+
+  .header-logo__code {
+    border: 2px solid currentcolor;
+    font-family: var(--font-body--family);
+    font-size: clamp(0.65rem, 0.8vw, 1rem);
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.35em 0.45em;
+    transform: rotate(-4deg);
   }
 
   .header-logo__solid-header-image-container {

@@ -1,0 +1,362 @@
+{% comment %}
+  Contact page: intro text and a "sell or donate your films" box on the left, Horizon's contact
+  form block (blocks/contact-form.liquid, Shopify's native contact form) on the right.
+  The form is added as a block inside this section in the Theme Editor and is restyled below,
+  scoped to this section only. The phone field is hidden (not needed for the archive).
+{% endcomment %}
+
+{% liquid
+  assign label = section.settings.label
+  assign heading = section.settings.heading
+  assign heading_accent = section.settings.heading_accent
+  assign intro = section.settings.intro
+  assign box_label = section.settings.box_label
+  assign box_heading = section.settings.box_heading
+  assign box_text = section.settings.box_text
+%}
+
+<section class="contact-archive">
+  <div class="contact-archive__info">
+    {% if label != blank %}
+      <p class="contact-archive__label">{{ label | escape }}</p>
+    {% endif %}
+
+    {% if heading != blank or heading_accent != blank %}
+      <h1 class="contact-archive__heading">
+        {%- if heading != blank -%}
+          <span>{{ heading | escape }}</span>
+        {%- endif -%}
+        {%- if heading_accent != blank %} <em>{{ heading_accent | escape }}</em>{% endif -%}
+      </h1>
+    {% else %}
+      <h1 class="visually-hidden">{{ page.title | escape }}</h1>
+    {% endif %}
+
+    {% if intro != blank %}
+      <div class="contact-archive__intro">{{ intro }}</div>
+    {% endif %}
+
+    {% if box_heading != blank or box_text != blank %}
+      <div class="contact-archive__box contact-archive__box--{{ section.settings.box_color | default: 'yellow' }}">
+        {% if box_label != blank %}
+          <p class="contact-archive__box-label">{{ box_label | escape }}</p>
+        {% endif %}
+        {% if box_heading != blank %}
+          <h2 class="contact-archive__box-heading">{{ box_heading | escape }}</h2>
+        {% endif %}
+        {% if box_text != blank %}
+          <div class="contact-archive__box-text">{{ box_text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="contact-archive__form">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .contact-archive {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-ink);
+  }
+
+  .contact-archive p {
+    margin: 0;
+  }
+
+  .contact-archive__info {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  .contact-archive__label {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-archive__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.75rem, 6vw, 6rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .contact-archive__heading span {
+    text-transform: uppercase;
+  }
+
+  .contact-archive__heading em {
+    color: var(--archive-blue);
+    font-style: italic;
+  }
+
+  .contact-archive__intro {
+    max-width: 34ch;
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+    line-height: 1.35;
+  }
+
+  .contact-archive__intro p + p {
+    margin-block-start: 0.75em;
+  }
+
+  /* "Sell or donate your films" box */
+  .contact-archive__box--yellow {
+    --contact-box-background: #f2d46d;
+  }
+
+  .contact-archive__box--lilac {
+    --contact-box-background: #c6b9e6;
+  }
+
+  .contact-archive__box--red {
+    --contact-box-background: #e94b35;
+  }
+
+  .contact-archive__box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 36rem;
+    margin-block-start: 0.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--contact-box-background, #f2d46d);
+    border: 2px solid var(--archive-ink);
+    box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+  }
+
+  .contact-archive__box-label {
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-archive__box-heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1;
+  }
+
+  .contact-archive__box-text {
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.4;
+  }
+
+  .contact-archive__box-text p + p {
+    margin-block-start: 0.6em;
+  }
+
+  /* Horizon's contact form block, restyled inside this section only */
+  .contact-archive .contact-form {
+    width: 100%;
+  }
+
+  .contact-archive .contact-form__form {
+    gap: 1rem;
+  }
+
+  .contact-archive .contact-form__form-row {
+    gap: 1rem;
+  }
+
+  .contact-archive .contact-form__input {
+    padding: 1rem 1.15rem;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.1rem;
+  }
+
+  .contact-archive .contact-form__input::placeholder {
+    color: rgb(25 25 25 / 0.6);
+  }
+
+  .contact-archive .contact-form__input:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 2px;
+  }
+
+  .contact-archive .contact-form__input--textarea {
+    min-height: 12rem;
+  }
+
+  /* The phone number is not needed */
+  .contact-archive #ContactForm-phone,
+  .contact-archive label[for='ContactForm-phone'] {
+    display: none;
+  }
+
+  /* Submit button: blue with an arrow cell, like the other call-to-action buttons */
+  .contact-archive .submit-button {
+    position: relative;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 3.75rem;
+    margin-block-start: 0.5rem;
+    padding: 0 4.75rem 0 1.5rem;
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .contact-archive .submit-button::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    display: grid;
+    width: 3.75rem;
+    place-items: center;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border-inline-start: 2px solid var(--archive-ink);
+    content: '↗';
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  .contact-archive .submit-button:hover::after,
+  .contact-archive .submit-button:focus-visible::after {
+    background: #f2d46d;
+  }
+
+  .contact-archive .contact-form__error,
+  .contact-archive .contact-form__success {
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--archive-ink);
+    font-family: var(--font-accent--family);
+    font-size: 0.85rem;
+  }
+
+  .contact-archive .contact-form__success {
+    background: #c9e86b;
+  }
+
+  .contact-archive .contact-form__error {
+    background: #e94b35;
+  }
+
+  @media screen and (min-width: 990px) {
+    .contact-archive {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact archive",
+  "max_blocks": 1,
+  "blocks": [
+    {
+      "type": "contact-form"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Write to the"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading, italic part",
+      "info": "Shown in blue italics after the heading.",
+      "default": "archive."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Questions about a film, an order or the condition of a copy? Send us a note and a real person will answer within two working days.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Films to part with"
+    },
+    {
+      "type": "text",
+      "id": "box_label",
+      "label": "Box label",
+      "default": "Have films to part with?"
+    },
+    {
+      "type": "text",
+      "id": "box_heading",
+      "label": "Box heading",
+      "default": "Sell or donate your films"
+    },
+    {
+      "type": "richtext",
+      "id": "box_text",
+      "label": "Box text",
+      "default": "<p>We take in DVDs and Blu-rays in good condition: cult classics, world cinema and forgotten gems.</p><p>Use the form to tell us what you have, with titles, formats and condition. We reply with an offer, or a friendly no thank you.</p>"
+    },
+    {
+      "type": "select",
+      "id": "box_color",
+      "label": "Box colour",
+      "options": [
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        },
+        {
+          "value": "lilac",
+          "label": "Lilac"
+        },
+        {
+          "value": "red",
+          "label": "Red"
+        }
+      ],
+      "default": "yellow"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact archive",
+      "blocks": [
+        {
+          "type": "contact-form"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -99,13 +99,24 @@
           on:pointerenter="/activate"
           on:pointerleave="/deactivate"
         >
+          {%- liquid
+            # Cinema Archive: link.active ignores links with a query string (e.g. the Directors
+            # link /pages/directors?view=directors), so also compare the path without "?..."
+            assign link_is_active = link.active
+            if link_is_active == false and link.url contains '?'
+              assign link_path = link.url | split: '?' | first
+              if link_path != '/' and request.path contains link_path
+                assign link_is_active = true
+              endif
+            endif
+          -%}
           {%- if link.links != blank -%}
             <span class="menu-list__trigger">
           {%- endif -%}
           <a
             href="{{ link.url }}"
             data-skip-node-update="true"
-            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
+            class="menu-list__link{% if link_is_active %} menu-list__link--active{% endif %}"
             {% if link.current %}
               aria-current="page"
             {% endif %}

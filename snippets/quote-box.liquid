@@ -1,0 +1,113 @@
+{% doc %}
+  Quote box: a coloured, framed box with a large quotation mark, a small label, a quote and an
+  optional author line ("— Archive employee").
+  Used by sections/product-archive-note.liquid and sections/main-directors.liquid.
+  Renders nothing when the quote is empty.
+
+  @param {string} quote - The quote text (plain text; line breaks are kept)
+  @param {string} [label] - Small label above the quote
+  @param {string} [author] - Who wrote the quote; "— " is added in front
+  @param {string} [color] - 'red' (default), 'lilac', 'yellow' or 'blue'
+
+  @example
+  {% render 'quote-box', quote: note, label: 'Why it belongs on your shelf', author: note_author, color: 'red' %}
+{% enddoc %}
+
+{% liquid
+  assign box_color = color | default: 'red'
+%}
+
+{% if quote != blank %}
+  <figure class="quote-box quote-box--{{ box_color }}">
+    <span class="quote-box__mark" aria-hidden="true">“</span>
+
+    {% if label != blank %}
+      <p class="quote-box__label">{{ label | escape }}</p>
+    {% endif %}
+
+    <blockquote class="quote-box__quote">
+      <p>{{ quote | escape | newline_to_br }}</p>
+    </blockquote>
+
+    {% if author != blank %}
+      <figcaption class="quote-box__author">— {{ author | escape }}</figcaption>
+    {% endif %}
+  </figure>
+{% endif %}
+
+{% stylesheet %}
+  /* Colour variants: background, text and quotation mark */
+  .quote-box--red {
+    --quote-box-background: #e94b35;
+    --quote-box-text: #191919;
+    --quote-box-mark: #f2d46d;
+  }
+
+  .quote-box--lilac {
+    --quote-box-background: #c6b9e6;
+    --quote-box-text: #191919;
+    --quote-box-mark: #3155e8;
+  }
+
+  .quote-box--yellow {
+    --quote-box-background: #f2d46d;
+    --quote-box-text: #191919;
+    --quote-box-mark: #e94b35;
+  }
+
+  .quote-box--blue {
+    --quote-box-background: #3155e8;
+    --quote-box-text: #f5eedc;
+    --quote-box-mark: #f2d46d;
+  }
+
+  .quote-box {
+    position: relative;
+    margin: 0;
+    padding: clamp(3rem, 7vw, 7rem) clamp(1.5rem, 8%, 8rem) clamp(2.5rem, 6vw, 6rem);
+    color: var(--quote-box-text, #191919);
+    background: var(--quote-box-background, #e94b35);
+    border: 2px solid #191919;
+  }
+
+  .quote-box p {
+    margin: 0;
+  }
+
+  .quote-box__mark {
+    position: absolute;
+    top: -0.1em;
+    right: clamp(1rem, 4vw, 4rem);
+    color: var(--quote-box-mark, #f2d46d);
+    font-family: var(--font-heading--family);
+    font-size: clamp(5rem, 10vw, 10rem);
+    line-height: 1;
+  }
+
+  .quote-box__label {
+    margin-block-end: 1rem;
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .quote-box__quote {
+    max-width: 46ch;
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.5rem, 2.8vw, 2.75rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  .quote-box__author {
+    margin-block-start: clamp(1.25rem, 2.5vw, 2rem);
+    font-family: var(--font-accent--family);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+{% endstylesheet %}

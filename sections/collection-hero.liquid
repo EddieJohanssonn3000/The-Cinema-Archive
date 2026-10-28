@@ -1,0 +1,131 @@
+{% comment %}
+  Collection hero: blue band at the top of collection pages with a label, a large heading
+  and a short description. Used on every collection (the template is shared).
+  In the label, [count] is replaced with the number of products in the collection,
+  padded to three digits (4 becomes 004). Every field is optional.
+{% endcomment %}
+
+{% liquid
+  assign label = section.settings.label
+  assign heading = section.settings.heading
+  assign description = section.settings.description
+
+  # Pad the product count to three digits, e.g. 4 -> "004"
+  assign count_text = collection.products_count | append: ''
+  if count_text.size < 3
+    assign count_text = '000' | append: count_text | slice: -3, 3
+  endif
+  assign label = label | replace: '[count]', count_text
+%}
+
+<section class="collection-hero">
+  {% if label != blank %}
+    <p class="collection-hero__label">{{ label | escape }}</p>
+  {% endif %}
+
+  {% if heading != blank %}
+    <div class="collection-hero__heading">{{ heading }}</div>
+  {% endif %}
+
+  {% if description != blank %}
+    <div class="collection-hero__description">{{ description }}</div>
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  .collection-hero {
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+    --archive-yellow: #f2d46d;
+
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(3rem, 3vw, 7rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+  }
+
+  .collection-hero p {
+    margin: 0;
+  }
+
+  .collection-hero__label {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .collection-hero__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(3.5rem, 10vw, 10rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+
+  .collection-hero__heading p {
+    margin: 0;
+  }
+
+  .collection-hero__heading p:first-child {
+    text-transform: uppercase;
+  }
+
+  .collection-hero__heading em {
+    color: var(--archive-yellow);
+    font-style: italic;
+  }
+
+  .collection-hero__description {
+    max-width: 34ch;
+    font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+    line-height: 1.3;
+  }
+
+  .collection-hero__description p {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .collection-hero__description {
+      align-self: flex-end;
+      margin-block-start: clamp(1rem, 4vw, 4rem);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "[count] is replaced with the number of products, e.g. 004.",
+      "default": "The complete index / 001-[count]"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Use two paragraphs. Italic text is shown in yellow.",
+      "default": "<p>The film</p><p><em>archive</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>A growing collection of second-hand films, each inspected, indexed and ready to be watched again.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection hero"
+    }
+  ]
+}
+{% endschema %}

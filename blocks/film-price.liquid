@@ -1,0 +1,97 @@
+{% comment %}
+  Film price block for the product page: the price in large monospace type and an
+  availability badge.
+  The badge ("Only one copy") is shown when inventory is tracked and exactly one copy
+  is in stock. Sold out products show no badge; Horizon's buy button shows "Sold out".
+{% endcomment %}
+
+{% liquid
+  assign variant = closest.product.selected_or_first_available_variant
+
+  assign show_badge = false
+  if variant.inventory_management == 'shopify' and variant.inventory_quantity == 1 and variant.available
+    assign show_badge = true
+  endif
+%}
+
+<div class="film-price" {{ block.shopify_attributes }}>
+  <p class="film-price__amount">
+    {%- if variant.compare_at_price > variant.price -%}
+      <span class="visually-hidden">Sale price</span>
+    {%- endif -%}
+    {{ variant.price | money }}
+  </p>
+
+  {% if variant.compare_at_price > variant.price %}
+    <p class="film-price__compare">
+      <span class="visually-hidden">Regular price</span>
+      <s>{{ variant.compare_at_price | money }}</s>
+    </p>
+  {% endif %}
+
+  {% if show_badge and block.settings.badge_label != blank %}
+    <p class="film-price__badge">{{ block.settings.badge_label | escape }}</p>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .film-price {
+    --archive-ink: #191919;
+    --archive-lime: #c9e86b;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    color: var(--archive-ink);
+  }
+
+  .film-price p {
+    margin: 0;
+  }
+
+  .film-price__amount {
+    font-family: var(--font-accent--family);
+    font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .film-price__compare {
+    font-family: var(--font-accent--family);
+    font-size: 1rem;
+    opacity: 0.6;
+  }
+
+  .film-price__badge {
+    padding: 0.4rem 0.6rem;
+    background: var(--archive-lime);
+    border: 2px solid var(--archive-ink);
+    font-family: var(--font-accent--family);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Film price",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_label",
+      "label": "Badge text",
+      "info": "Shown when exactly one copy is in stock (inventory must be tracked).",
+      "default": "Only one copy"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Film price"
+    }
+  ]
+}
+{% endschema %}

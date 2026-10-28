@@ -1,56 +1,217 @@
 <section class="archive-introduction">
-  <p class="archive-introduction__eyebrow">
-    {{ section.settings.eyebrow }}
-  </p>
+  <div class="archive-introduction__main">
+    <h1 class="archive-introduction__heading">
+      {{ section.settings.heading }}
+    </h1>
 
-  <h1 class="archive-introduction__heading">
-    {{ section.settings.heading }}
-  </h1>
-
-  <div class="archive-introduction__text">
-    {{ section.settings.description }}
   </div>
 
-  {% if section.settings.link_text != blank and section.settings.link_url != blank %}
-    <a
-      class="archive-introduction__link"
-      href="{{ section.settings.link_url }}"
-    >
-      {{ section.settings.link_text }}
-    </a>
-  {% endif %}
+  <aside class="archive-introduction__panel">
+    {% if section.settings.panel_label != blank %}
+      <p class="archive-introduction__panel-label">
+        {{ section.settings.panel_label }}
+      </p>
+    {% endif %}
+
+    {% if section.settings.panel_callout != blank %}
+      <p class="archive-introduction__panel-callout">
+        {{ section.settings.panel_callout }}
+      </p>
+    {% endif %}
+  </aside>
+
+  <div class="archive-introduction__supporting-content">
+    <div class="archive-introduction__text">
+      {{ section.settings.description }}
+    </div>
+
+    {% if section.settings.link_text != blank and section.settings.link_url != blank %}
+      <a
+        class="archive-introduction__link"
+        href="{{ section.settings.link_url }}"
+      >
+        <span>{{ section.settings.link_text }}</span>
+        <span class="archive-introduction__link-arrow" aria-hidden="true">↗</span>
+      </a>
+    {% endif %}
+  </div>
 </section>
 
 {% stylesheet %}
   .archive-introduction {
-    padding: 5rem 1.5rem;
-    text-align: center;
+    --archive-cream: #f5eedc;
+    --archive-ink: #191919;
+    --archive-blue: #3155e8;
+    --archive-yellow: #f2d46d;
+    position: relative;
+    /* Fixed height (not tied to the window height) so the hero looks the same in a
+       normal window and in full screen, and always fits the text and button */
+    min-height: 42rem;
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border-block: 1px solid var(--archive-ink);
   }
 
-  .archive-introduction__eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+  .archive-introduction__main {
+    position: relative;
+    z-index: 1;
   }
 
   .archive-introduction__heading {
-    max-width: 800px;
-    margin: 1rem auto;
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    line-height: 1.05;
+    max-width: 15ch;
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+  }
+
+  .archive-introduction__heading p {
+    margin: 0;
+  }
+
+  .archive-introduction__heading p:nth-child(2) {
+    margin-inline-start: 18%;
+    color: var(--archive-blue);
+    font-style: italic;
+  }
+
+  .archive-introduction__panel {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 34%;
+    min-height: 25rem;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    background: var(--archive-yellow);
+    border: 2px solid var(--archive-ink);
+    border-top: none;
+  }
+
+  .archive-introduction__panel-label,
+  .archive-introduction__panel-callout {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.5vw, 1.35rem);
+    line-height: 1.1;
+  }
+
+  .archive-introduction__panel-label {
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .archive-introduction__panel-callout {
+    position: relative;
+    align-self: flex-end;
+    max-width: 14ch;
+    font-family: var(--font-heading--family);
+    font-style: italic;
+    text-align: right;
+    transform: rotate(-4deg);
+  }
+
+  .archive-introduction__panel-callout::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.35rem;
+    left: 0;
+    height: 0.2rem;
+    background: var(--archive-blue);
+    content: '';
+    transform: rotate(-1deg);
+  }
+
+  /* Placed from the top, so it overlaps the yellow panel by the same amount
+     whatever the window height */
+  .archive-introduction__supporting-content {
+    position: absolute;
+    top: 17rem;
+    right: 3.9rem;
+    z-index: 3;
+    width: min(32rem, 38%);
   }
 
   .archive-introduction__text {
-    max-width: 600px;
-    margin: 0 auto 2rem;
-    line-height: 1.7;
+    max-width: 18ch;
+    margin: 0 0 1.5rem;
+    font-family: var(--font-body--family);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.4;
   }
 
   .archive-introduction__link {
-    display: inline-block;
-    padding: 0.9rem 1.5rem;
-    border: 1px solid currentColor;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    width: fit-content;
+    min-width: min(25rem, 100%);
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+    font-family: var(--font-body--family);
+    font-size: 1.05rem;
+    font-weight: 700;
     text-decoration: none;
+    text-transform: uppercase;
+    border: 2px solid var(--archive-ink);
+    box-shadow: 0.45rem 0.45rem 0 var(--archive-ink);
+  }
+
+  .archive-introduction__link span:first-child {
+    padding: 1rem 1.25rem;
+  }
+
+  .archive-introduction__link-arrow {
+    display: grid;
+    width: 3.5rem;
+    place-items: center;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border-inline-start: 2px solid var(--archive-ink);
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
+
+  @media (max-width: 749px) {
+    .archive-introduction {
+      min-height: auto;
+      padding-bottom: 3rem;
+    }
+
+    .archive-introduction__heading {
+      max-width: 10ch;
+      font-size: clamp(3.25rem, 17vw, 6rem);
+    }
+
+    .archive-introduction__heading p:nth-child(2) {
+      margin-inline-start: 12%;
+    }
+
+    /* The yellow panel is decorative; hidden on mobile to keep the hero short */
+    .archive-introduction__panel {
+      display: none;
+    }
+
+    .archive-introduction__supporting-content {
+      position: relative;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      width: 100%;
+      margin-top: 3rem;
+    }
+
+    .archive-introduction__text {
+      max-width: 20ch;
+      font-size: 1.35rem;
+    }
   }
 {% endstylesheet %}
 
@@ -59,16 +220,10 @@
   "name": "Archive introduction",
   "settings": [
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Small heading",
-      "default": "THE CINEMA ARCHIVE"
-    },
-    {
-      "type": "text",
+      "type": "richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "Physical films. Lasting stories."
+      "default": "<p>PHYSICAL FILMS.</p><p><em>LASTING</em></p><p>STORIES.</p>"
     },
     {
       "type": "richtext",
@@ -86,6 +241,22 @@
       "type": "url",
       "id": "link_url",
       "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Archival panel"
+    },
+    {
+      "type": "text",
+      "id": "panel_label",
+      "label": "Panel label",
+      "default": "A living archive of physical film"
+    },
+    {
+      "type": "text",
+      "id": "panel_callout",
+      "label": "Panel callout",
+      "default": "Long live the physical film!"
     }
   ],
   "presets": [

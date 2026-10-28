@@ -1,32 +1,131 @@
+{% doc %}
+  Text under a film poster on collection cards: title and price on one row, then
+  "Director · Year" and format/condition tags.
+  The whole card is already a link (product-card__link), so nothing here is a link.
+  Empty values are not rendered.
 
-{% assign film_format = product.metafields.custom.format.value %}
-{% assign film_condition = product.metafields.custom.condition.value %}
+  @param {product} product - Product object
 
-{% if film_format != blank or film_condition != blank %}
-  <div class="film-card-meta">
-    {% if film_format != blank %}
-      <span>{{ film_format | escape }}</span>
-    {% endif %}
+  @example
+  {% render 'film-card-meta', product: closest.product %}
+{% enddoc %}
 
-    {% if film_format != blank and film_condition != blank %}
-      <span aria-hidden="true">·</span>
-    {% endif %}
+{% liquid
+  assign director_name = product.metafields.custom.director.value.name.value
+  assign release_year = product.metafields.custom.release_year.value
+  assign film_format = product.metafields.custom.format.value
+  assign film_condition = product.metafields.custom.condition.value
+%}
 
-    {% if film_condition != blank %}
-      <span>{{ film_condition | escape }}</span>
-    {% endif %}
+<div class="film-card-info">
+  <div class="film-card-info__header">
+    <h3 class="film-card-info__title">{{ product.title | escape }}</h3>
+    <span class="film-card-info__price">{{ product.price | money }}</span>
   </div>
-{% endif %}
+
+  {% if director_name != blank or release_year != blank %}
+    <p class="film-card-info__meta">
+      {{- director_name | escape -}}
+      {%- if director_name != blank and release_year != blank %} · {% endif -%}
+      {{- release_year -}}
+    </p>
+  {% endif %}
+
+  {% if film_format != blank or film_condition != blank %}
+    <div class="film-card-info__tags">
+      {% if film_format != blank %}
+        <span class="film-card-info__tag">{{ film_format | escape }}</span>
+      {% endif %}
+      {% if film_condition != blank %}
+        <span class="film-card-info__tag">{{ film_condition | escape }}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
 
 {% stylesheet %}
-  .film-card-meta {
+  /* Poster frame: same look as the film cards on the homepage.
+     !important is needed because Horizon sets the gallery's border and
+     aspect ratio as inline styles from the block settings. */
+  .product-grid .card-gallery {
+    --gallery-aspect-ratio: 2 / 3 !important;
+
+    overflow: hidden;
+    border: 2px solid #191919 !important;
+    border-radius: 0 !important;
+  }
+
+  .product-grid .card-gallery img {
+    object-fit: cover;
+  }
+
+  /* Horizon lets posters run edge to edge on mobile when the grid is full width
+     (negative margins on the gallery). Keep them inside the page margin instead. */
+  @media screen and (max-width: 749px) {
+    .collection-wrapper--full-width .product-grid {
+      padding-inline: var(--page-margin);
+    }
+
+    .collection-wrapper--full-width .product-grid .card-gallery {
+      margin-inline: 0;
+    }
+  }
+
+  .film-card-info {
+    --archive-ink: #191919;
+
+    margin-block-start: 1rem;
+    color: var(--archive-ink);
+  }
+
+  .film-card-info__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .film-card-info__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.3rem, 2vw, 2rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  .product-card:hover .film-card-info__title,
+  .product-card:focus-within .film-card-info__title {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .film-card-info__price {
+    flex: 0 0 auto;
+    font-family: var(--font-accent--family);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .film-card-info__meta {
+    margin: 0.4rem 0 0;
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+  }
+
+  .film-card-info__tags {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.35rem;
-    margin-block: 0.25rem;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    opacity: 0.75;
+    gap: 0.5rem;
+    margin-block-start: 1rem;
+  }
+
+  .film-card-info__tag {
+    padding: 0.35em 0.6em;
+    border: 1.5px solid var(--archive-ink);
+    font-family: var(--font-accent--family);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
   }
 {% endstylesheet %}

@@ -1,5 +1,6 @@
 {% doc %}
-  Renders a film's director, format, condition, release year and runtime from product metafields.
+  Renders a film's director, format, release year, runtime and condition from product
+  metafields as a list with a rule between each row.
   Renders nothing when none of the metafields have a value.
 
   @param {product} product - Product object
@@ -40,13 +41,6 @@
       </div>
     {% endif %}
 
-    {% if film_condition != blank %}
-      <div class="film-details__item">
-        <dt class="film-details__label">Condition</dt>
-        <dd class="film-details__value">{{ film_condition | escape }}</dd>
-      </div>
-    {% endif %}
-
     {% if release_year != blank %}
       <div class="film-details__item">
         <dt class="film-details__label">Release year</dt>
@@ -59,20 +53,31 @@
         # Runtime is stored as minutes, e.g. 99 is shown as "1 h 39 min"
         assign runtime_hours = runtime | divided_by: 60
         assign runtime_minutes = runtime | modulo: 60
+
+        # Build the text in one string so whitespace control cannot drop the spaces
+        assign runtime_text = ''
+        if runtime_hours > 0
+          assign runtime_text = runtime_hours | append: ' h'
+        endif
+        if runtime_minutes > 0
+          if runtime_text != ''
+            assign runtime_text = runtime_text | append: ' '
+          endif
+          assign runtime_text = runtime_text | append: runtime_minutes | append: ' min'
+        endif
       %}
       <div class="film-details__item">
         <dt class="film-details__label">Runtime</dt>
         <dd class="film-details__value">
-          <time datetime="PT{{ runtime }}M">
-            {%- if runtime_hours > 0 -%}
-              {{ runtime_hours }} h
-            {%- endif -%}
-            {%- if runtime_hours > 0 and runtime_minutes > 0 %} {% endif -%}
-            {%- if runtime_minutes > 0 -%}
-              {{ runtime_minutes }} min
-            {%- endif -%}
-          </time>
+          <time datetime="PT{{ runtime }}M">{{ runtime_text }}</time>
         </dd>
+      </div>
+    {% endif %}
+
+    {% if film_condition != blank %}
+      <div class="film-details__item">
+        <dt class="film-details__label">Condition</dt>
+        <dd class="film-details__value">{{ film_condition | escape }}</dd>
       </div>
     {% endif %}
   </dl>
@@ -80,30 +85,46 @@
 
 {% stylesheet %}
   .film-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    --archive-ink: #191919;
+
     margin: 0;
+    color: var(--archive-ink);
+    border-block-start: 2px solid var(--archive-ink);
   }
 
   .film-details__item {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 0.95rem;
+    display: grid;
+    grid-template-columns: minmax(6rem, 1fr) minmax(0, 2fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.85rem;
+    border-block-end: 1px solid var(--archive-ink);
   }
 
   .film-details__label {
-    font-weight: 600;
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .film-details__value {
     margin: 0;
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    line-height: 1.25;
   }
 
   .film-details__value a {
     color: inherit;
     text-decoration: underline;
+    text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
+  }
+
+  .film-details__value a:hover,
+  .film-details__value a:focus-visible {
+    text-decoration-thickness: 2px;
   }
 {% endstylesheet %}

@@ -1,0 +1,233 @@
+{% comment %}
+  Collection toolbar: format filter as buttons on the left, sorting on the right.
+
+  The buttons are built from Shopify's storefront filter for the metafield custom.format
+  (added in the Search & Discovery app). Each button is a plain link, so no JavaScript is needed
+  and the page reloads with the chosen filter. "All formats" links to the collection without filters.
+  Only one format can be active at a time. Sorting is a form that reloads the page with ?sort_by=.
+
+  To avoid showing filters twice, turn off filtering and sorting in the product grid's
+  filter block in the Theme Editor.
+{% endcomment %}
+
+{% liquid
+  # Find the format filter among the collection's filters
+  assign format_filter = null
+  for filter in collection.filters
+    if filter.param_name contains 'custom.format'
+      assign format_filter = filter
+    endif
+  endfor
+
+  assign sort_options = collection.sort_options
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+  assign show_pills = false
+  if format_filter != null and format_filter.values.size > 0
+    assign show_pills = true
+  endif
+  assign show_sort = false
+  if sort_options.size > 1
+    assign show_sort = true
+  endif
+%}
+
+{% if show_pills or show_sort %}
+  <section class="collection-toolbar">
+    {% if show_pills %}
+      <nav class="collection-toolbar__filters" aria-label="{{ section.settings.filter_label | escape }}">
+        {% liquid
+          # Keep the chosen sorting when a format button is clicked
+          assign sort_param = ''
+          assign all_url = collection.url
+          if collection.sort_by != blank
+            assign sort_encoded = collection.sort_by | url_encode
+            assign sort_param = '&sort_by=' | append: sort_encoded
+            assign all_url = collection.url | append: '?sort_by=' | append: sort_encoded
+          endif
+        %}
+
+        <a
+          class="collection-toolbar__pill{% if format_filter.active_values.size == 0 %} collection-toolbar__pill--active{% endif %}"
+          href="{{ all_url }}"
+          {% if format_filter.active_values.size == 0 %}
+            aria-current="true"
+          {% endif %}
+        >
+          {{- section.settings.all_label | escape -}}
+        </a>
+
+        {% for value in format_filter.values %}
+          {% liquid
+            assign value_encoded = value.value | url_encode
+            assign value_url = collection.url | append: '?' | append: value.param_name | append: '=' | append: value_encoded | append: sort_param
+          %}
+          <a
+            class="collection-toolbar__pill{% if value.active %} collection-toolbar__pill--active{% endif %}"
+            href="{{ value_url }}"
+            {% if value.active %}
+              aria-current="true"
+            {% endif %}
+          >
+            {{- value.label | escape -}}
+          </a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    {% if show_sort %}
+      <form class="collection-toolbar__sort" method="get" action="{{ collection.url }}">
+        {% comment %} Keep the active format filter when the sorting changes {% endcomment %}
+        {% if format_filter != null %}
+          {% for active_value in format_filter.active_values %}
+            <input type="hidden" name="{{ active_value.param_name }}" value="{{ active_value.value | escape }}">
+          {% endfor %}
+        {% endif %}
+
+        <label class="collection-toolbar__sort-label" for="collection-sort-{{ section.id }}">
+          {{- section.settings.sort_label | escape -}}
+        </label>
+        <select
+          id="collection-sort-{{ section.id }}"
+          class="collection-toolbar__select"
+          name="sort_by"
+          onchange="this.form.submit()"
+        >
+          {% for option in sort_options %}
+            <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>
+              {{- option.name | escape -}}
+            </option>
+          {% endfor %}
+        </select>
+        <noscript>
+          <button type="submit" class="collection-toolbar__pill">OK</button>
+        </noscript>
+      </form>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .collection-toolbar {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+  }
+
+  .collection-toolbar__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .collection-toolbar__pill {
+    display: inline-block;
+    padding: 0.8rem 1.25rem;
+    color: var(--archive-ink);
+    background: transparent;
+    border: 2px solid var(--archive-ink);
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .collection-toolbar__pill--active {
+    color: var(--archive-cream);
+    background: var(--archive-ink);
+  }
+
+  .collection-toolbar__pill:not(.collection-toolbar__pill--active):hover,
+  .collection-toolbar__pill:not(.collection-toolbar__pill--active):focus-visible {
+    background: #f2d46d;
+  }
+
+  .collection-toolbar__sort {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-inline-start: auto;
+  }
+
+  .collection-toolbar__sort-label {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .collection-toolbar__select {
+    min-width: 12rem;
+    padding: 0.6rem 2.25rem 0.6rem 0.25rem;
+    color: var(--archive-ink);
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23191919' stroke-width='1.5'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    border: 0;
+    border-block-end: 2px solid var(--archive-ink);
+    border-radius: 0;
+    font-family: var(--font-accent--family);
+    font-size: 0.85rem;
+    font-weight: 700;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .collection-toolbar__select:focus-visible {
+    outline: 2px solid var(--archive-ink);
+    outline-offset: 2px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .collection-toolbar__sort {
+      width: 100%;
+      margin-inline-start: 0;
+    }
+
+    .collection-toolbar__select {
+      flex: 1 1 auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection toolbar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "Label for the \"all\" button",
+      "default": "All formats"
+    },
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Accessible name for the filter buttons",
+      "default": "Filter by format"
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sorting label",
+      "default": "Sort by"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection toolbar"
+    }
+  ]
+}
+{% endschema %}

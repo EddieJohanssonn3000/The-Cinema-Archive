@@ -69,6 +69,7 @@
         "text_tqQTNE",
         "text_twGGkJ"
       ],
+      "disabled": true,
       "name": "t:names.heading",
       "settings": {
         "content_direction": "column",
@@ -99,6 +100,32 @@
         "padding-block-end": 48
       }
     },
+    "collection_hero_38rk4q": {
+      "type": "collection-hero",
+      "name": "Collection hero",
+      "settings": {
+        "label": "The complete index / 001-[count]",
+        "heading": "<p>The film</p><p><em>archive</em></p>",
+        "description": "<p>A growing collection of second-hand films, each inspected, indexed and ready to be watched again.</p>"
+      }
+    },
+    "archive_note_JtrRXk": {
+      "type": "archive-note",
+      "name": "Archive note",
+      "settings": {
+        "label": "Archive note 04",
+        "quote": "Look beyond the familiar. The best film on the shelf may be the one you have never heard of."
+      }
+    },
+    "collection_toolbar_bXeaif": {
+      "type": "collection-toolbar",
+      "name": "Collection toolbar",
+      "settings": {
+        "all_label": "All formats",
+        "filter_label": "Filter by format",
+        "sort_label": "Sort by"
+      }
+    },
     "main": {
       "type": "main-collection",
       "blocks": {
@@ -106,14 +133,14 @@
           "type": "filters",
           "static": true,
           "settings": {
-            "enable_filtering": true,
+            "enable_filtering": false,
             "filter_style": "horizontal",
             "filter_width": "centered",
             "text_label_case": "default",
             "show_swatch_label": false,
             "show_filter_label": false,
-            "enable_sorting": true,
-            "enable_grid_density": true,
+            "enable_sorting": false,
+            "enable_grid_density": false,
             "background_color": "",
             "text_color": "",
             "padding-block-start": 8,
@@ -169,6 +196,7 @@
             "product_title_4nY4eT": {
               "type": "product-title",
               "name": "t:names.product_title",
+              "disabled": true,
               "settings": {
                 "width": "100%",
                 "max_width": "normal",
@@ -193,6 +221,7 @@
             },
             "price_EzJzMm": {
               "type": "price",
+              "disabled": true,
               "settings": {
                 "show_sale_price_first": true,
                 "show_installments": false,
@@ -243,12 +272,12 @@
         "mobile_product_card_size": "small",
         "enable_infinite_scroll": true,
         "products_per_page": 24,
-        "product_grid_width": "centered",
-        "full_width_on_mobile": true,
+        "product_grid_width": "full-width",
+        "full_width_on_mobile": false,
         "columns_gap_horizontal": 16,
         "columns_gap_vertical": 24,
-        "padding-inline-start": 0,
-        "padding-inline-end": 0,
+        "padding-inline-start": 60,
+        "padding-inline-end": 60,
         "background_color": "",
         "padding-block-start": 0,
         "padding-block-end": 32
@@ -257,6 +286,9 @@
   },
   "order": [
     "section",
+    "collection_hero_38rk4q",
+    "archive_note_JtrRXk",
+    "collection_toolbar_bXeaif",
     "main"
   ]
 }

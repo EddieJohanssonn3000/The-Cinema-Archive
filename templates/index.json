@@ -9,89 +9,37 @@
  */
 {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
-      "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
-          "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0,0,0,0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "link_text_color": "",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
+    "archive_introduction_djPFQr": {
+      "type": "archive-introduction",
+      "name": "Archive introduction",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "background_color": "",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "heading": "<p>PHYSICAL FILMS.</p><p><em>LASTING</em></p><p>STORIES.</p>",
+        "description": "<p>Second-hand cinema,<br>selected frame by frame.<br>Films to hold, revisit, lend<br>and keep.</p>",
+        "link_text": "Explore the collection",
+        "link_url": "shopify://collections/all",
+        "panel_label": "Archive entry № 001",
+        "panel_callout": "Play it again ↗"
+      }
+    },
+    "archive_marquee_YbEHbw": {
+      "type": "archive-marquee",
+      "name": "Archive marquee",
+      "settings": {
+        "label_start": "Now screening in the archive",
+        "quote": "Every copy watched, checked and catalogued by a real film obsessive.",
+        "label_end": "Issue 01 / Spring"
+      }
+    },
+    "featured_films_BLDEct": {
+      "type": "featured-films",
+      "name": "Featured films",
+      "settings": {
+        "label": "01 / The edit",
+        "heading": "<p>Films worth</p><p><em>keeping.</em></p>",
+        "description": "<p>Four singular films, rescued from the shelf and ready for their next close-up.</p>",
+        "collection": "",
+        "max_products": 4,
+        "button_label": "View all [count] films"
       }
     },
     "product_list_fa6P9H": {
@@ -272,6 +220,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "t:names.featured_collection",
       "settings": {
         "collection": "all",
@@ -293,21 +242,83 @@
         "padding-block-end": 48
       }
     },
-    "archive_introduction_djPFQr": {
-      "type": "archive-introduction",
-      "name": "Archive introduction",
+    "archive_quote_keM8i4": {
+      "type": "archive-quote",
+      "name": "Archive quote",
       "settings": {
-        "eyebrow": "THE CINEMA ARCHIVE",
-        "heading": "Physical films. Lasting stories.",
-        "description": "<p>Discover pre-owned films worth keeping, collecting and watching again.</p>",
-        "link_text": "Explore the collection",
-        "link_url": ""
+        "image": "shopify://shop_images/Jeremy_Yap-modified.jpg",
+        "image_credit": "Photo: Jeremy Yap / Unsplash",
+        "label": "A note from the projection booth",
+        "quote": "<p>“Streaming is convenient. A shelf is a <em>self-portrait.</em>”</p>",
+        "callout": "Keep cinema physical",
+        "text": "<p>We believe films deserve more than a thumbnail and an expiry date. Our collection brings together the strange, beautiful and essential.</p>"
+      }
+    },
+    "director_focus_mh9Jjq": {
+      "type": "director-focus",
+      "name": "Director focus",
+      "settings": {
+        "director": "sofia-coppola",
+        "number": "01",
+        "label": "Director focus / Vol. 07",
+        "excerpt_words": 20,
+        "button_label": "Enter the director archive"
+      }
+    },
+    "archive_newsletter_VLALak": {
+      "type": "archive-newsletter",
+      "blocks": {
+        "email_signup_9fpp34": {
+          "type": "email-signup",
+          "name": "t:names.email_signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "heading": "JOIN THE LIST",
+            "heading_text_color": "{{ settings.color_palette.background }}",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "input_style": "default",
+            "border_width": 1,
+            "border_radius": 100,
+            "input_background_color": "",
+            "input_text_color": "",
+            "input_border_color": "",
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "display_type": "arrow",
+            "label": "Sign up",
+            "integrated_button": false,
+            "button_type_preset": "h4",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "email_signup_9fpp34"
+      ],
+      "name": "Archive newsletter",
+      "settings": {
+        "label": "New arrivals, old favourites and one very good recommendation.",
+        "heading": "<p>The Friday Matinée</p>"
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
     "archive_introduction_djPFQr",
-    "product_list_fa6P9H"
+    "archive_marquee_YbEHbw",
+    "featured_films_BLDEct",
+    "product_list_fa6P9H",
+    "archive_quote_keM8i4",
+    "director_focus_mh9Jjq",
+    "archive_newsletter_VLALak"
   ]
 }

@@ -1,0 +1,66 @@
+{% comment %}
+  Small "← Back to archive" link shown above the product page.
+  Links to all films unless another link is chosen in the Theme Editor.
+{% endcomment %}
+
+{% liquid
+  assign back_url = section.settings.link | default: routes.all_products_collection_url
+%}
+
+{% if section.settings.label != blank %}
+  <div class="archive-back-link">
+    <a class="archive-back-link__link" href="{{ back_url }}">
+      <span aria-hidden="true">←</span>
+      {{ section.settings.label | escape }}
+    </a>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .archive-back-link {
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.75rem) 0;
+  }
+
+  .archive-back-link__link {
+    display: inline-flex;
+    gap: 0.5rem;
+    color: #191919;
+    font-family: var(--font-accent--family);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .archive-back-link__link:hover,
+  .archive-back-link__link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Back link",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Back to archive"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to link to all films."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back link"
+    }
+  ]
+}
+{% endschema %}

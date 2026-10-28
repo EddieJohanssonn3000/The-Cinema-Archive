@@ -1,0 +1,192 @@
+{% comment %}
+  "More from <director>" on the product page: other films by the same director.
+  Nothing is rendered when the film has no director or the director has no other films.
+
+  Liquid has no reverse lookup from a director to its films, so we scan the store's products
+  and keep those with the same director (the same approach as sections/main-director.liquid).
+  Limitation: only the first 50 products of collections.all are scanned.
+{% endcomment %}
+
+{% liquid
+  assign director = product.metafields.custom.director.value
+  assign max_films = section.settings.max_products
+  assign film_count = 0
+%}
+
+{% if director != blank %}
+  {% capture film_cards %}
+    {% paginate collections.all.products by 50 %}
+      {% for film in collections.all.products %}
+        {% if film.id != product.id and film_count < max_films %}
+          {% if film.metafields.custom.director.value.system.id == director.system.id %}
+            {% assign film_count = film_count | plus: 1 %}
+            <li class="director-films__item">{% render 'film-card', product: film %}</li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endpaginate %}
+  {% endcapture %}
+
+  {% if film_count > 0 %}
+    {% liquid
+      # Build the heading: [director] becomes the director's name, linked to their page
+      assign director_name = director.name.value | escape
+      if director.system.url != blank
+        assign director_html = '<a class="director-films__name" href="' | append: director.system.url | append: '">' | append: director_name | append: '</a>'
+      else
+        assign director_html = '<span class="director-films__name">' | append: director_name | append: '</span>'
+      endif
+      assign heading = section.settings.heading | escape | replace: '[director]', director_html
+    %}
+
+    <section class="director-films">
+      {% if section.settings.label != blank %}
+        <p class="director-films__label">{{ section.settings.label | escape }}</p>
+      {% endif %}
+
+      <h2 class="director-films__heading">{{ heading }}</h2>
+
+      <ul class="director-films__grid" role="list">
+        {{ film_cards }}
+      </ul>
+    </section>
+  {% endif %}
+{% endif %}
+
+{% stylesheet %}
+  .director-films {
+    --archive-ink: #191919;
+    --archive-blue: #3155e8;
+
+    padding: clamp(2rem, 3.5vw, 3.5rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: var(--archive-ink);
+  }
+
+  .director-films__label {
+    margin: 0 0 1rem;
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .director-films__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.6rem, 2.8vw, 2.75rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .director-films__name {
+    color: var(--archive-blue);
+    font-style: italic;
+    text-decoration: none;
+  }
+
+  a.director-films__name:hover,
+  a.director-films__name:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .director-films__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1rem;
+    margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .director-films__item {
+    min-width: 0;
+  }
+
+  /* Smaller card text in this section only */
+  .director-films .film-card__header {
+    margin-block-start: 0.75rem;
+  }
+
+  .director-films .film-card__title {
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+  }
+
+  .director-films .film-card__price {
+    font-size: 0.8rem;
+  }
+
+  .director-films .film-card__meta {
+    font-size: 0.95rem;
+  }
+
+  .director-films .film-card__tags {
+    margin-block-start: 0.75rem;
+  }
+
+  /* Mobile: one swipeable row instead of a grid (CSS scroll snap, no JavaScript).
+     Cards are 45% wide so the next card peeks in and shows that the row can be swiped. */
+  @media screen and (max-width: 749px) {
+    .director-films__grid {
+      display: flex;
+      gap: 1rem;
+      padding-block-end: 0.75rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+    }
+
+    .director-films__item {
+      flex: 0 0 45%;
+      scroll-snap-align: start;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .director-films {
+      padding-block-start: 0;
+    }
+
+    .director-films__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 2.5rem 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "More from the director",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "From the same director"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "[director] is replaced with the director's name, linked to their page.",
+      "default": "More from [director]"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Number of films",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "More from the director"
+    }
+  ]
+}
+{% endschema %}

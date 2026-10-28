@@ -1,0 +1,55 @@
+{% comment %}
+  Product archive note: a red quote box (snippets/quote-box.liquid) about the film and who wrote it.
+  The quote and author come from the product metafields custom.archive_note (multi-line text)
+  and custom.archive_note_author (single line text), so every film has its own note.
+  Nothing is rendered when the product has no note.
+{% endcomment %}
+
+{% liquid
+  assign note = product.metafields.custom.archive_note.value
+  assign note_author = product.metafields.custom.archive_note_author.value
+%}
+
+{% if note != blank %}
+  <section class="product-archive-note">
+    {% render 'quote-box', quote: note, label: section.settings.label, author: note_author, color: 'red' %}
+  </section>
+{% elsif request.design_mode %}
+  <section class="product-archive-note product-archive-note--empty">
+    <p>Archive note: this product has no custom.archive_note metafield yet.</p>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .product-archive-note {
+    padding: clamp(2.5rem, 5vw, 5rem) clamp(1.5rem, 4vw, 3.75rem);
+    color: #191919;
+  }
+
+  .product-archive-note--empty {
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product archive note",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Why it belongs on your shelf"
+    },
+    {
+      "type": "paragraph",
+      "content": "The quote and author come from the product metafields custom.archive_note and custom.archive_note_author."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product archive note"
+    }
+  ]
+}
+{% endschema %}
