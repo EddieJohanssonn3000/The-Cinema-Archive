@@ -1,92 +1,246 @@
-# Horizon
+# The Cinema Archive
 
-[Getting started](#getting-started) |
-[Staying up to date with Horizon changes](#staying-up-to-date-with-horizon-changes) |
-[Developer tools](#developer-tools) |
-[Contributing](#contributing) |
-[License](#license)
+A second-hand film store built on Shopify. The Cinema Archive sells physical films (DVD and Blu-ray) and puts film discovery and film history first: every copy is a single, inspected item, and every film is connected to its director.
 
-Horizon is the flagship of a new generation of first party Shopify themes. It incorporates the latest Liquid Storefronts features, including [theme blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks/theme-blocks/quick-start?framework=liquid).
+The project is a customised version of Shopify's **Horizon** theme, built as a five-week final project before an internship (LIA). It demonstrates Shopify theme development with Liquid, reusable sections and theme blocks, product metafields and a metaobject for directors.
 
-- **Web-native in its purest form:** Themes run on the [evergreen web](https://www.w3.org/2001/tag/doc/evergreen-web/). We leverage the latest web browsers to their fullest, while maintaining support for the older ones through progressive enhancement—not polyfills.
-- **Lean, fast, and reliable:** Functionality and design defaults to "no" until it meets this requirement. Code ships on quality. Themes must be built with purpose. They shouldn't support each and every feature in Shopify.
-- **Server-rendered:** HTML must be rendered by Shopify servers using Liquid. Business logic and platform primitives such as translations and money formatting don't belong on the client. Async and on-demand rendering of parts of the page is OK, but we do it sparingly as a progressive enhancement.
-- **Functional, not pixel-perfect:** The Web doesn't require each page to be rendered pixel-perfect by each browser engine. Using semantic markup, progressive enhancement, and clever design, we ensure that themes remain functional regardless of the browser.
+> **Status:** school project. The store is a password-protected Shopify development store; there are no real customers or orders.
+
+---
+
+## Contents
+
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Data model](#data-model)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Store setup (Shopify Admin)](#store-setup-shopify-admin)
+- [Working with the Theme Editor](#working-with-the-theme-editor)
+- [Git workflow](#git-workflow)
+- [Testing](#testing)
+- [Known limitations](#known-limitations)
+- [Use of AI](#use-of-ai)
+- [Credits and license](#credits-and-license)
+
+---
+
+## Features
+
+**Homepage**
+- Archive introduction (hero), a dark marquee band and a quote section with a photo.
+- *Featured films*: film cards from a chosen collection with a staggered layout and a "View all N films" button.
+- *Director focus*: highlights one director from the Directors metaobject.
+- Newsletter sign-up using Shopify's native customer form.
+
+**Films (collection page)**
+- Collection hero with an automatic product count.
+- Format filter as buttons (All formats, DVD, Blu-ray) built from Shopify's storefront filters, plus sorting.
+- Film cards showing director, release year, format and condition from metafields.
+
+**Product page**
+- Large title, description, price and an "Only one copy" badge when exactly one copy is in stock.
+- Film details: director (linked to the director page), format, release year, runtime and condition.
+- An "archive note" quote box per film, and "More from [director] in the archive".
+- Shopify's native cart and checkout, restyled buy button and sticky add-to-cart bar.
+
+**Directors**
+- Directors overview with portrait cards and the number of films per director.
+- Director page with portrait, facts (born, country, films in the archive), lead text, biography and filmography.
+
+**Contact page**
+- Styled Shopify contact form and a "sell or donate your films" section.
+
+**Responsive** layouts for mobile, tablet and desktop, tested at 390–440, 1024, 1280, 1440 and 1920 px.
+
+## Tech stack
+
+- Shopify development store and **Horizon 4.2.0** theme
+- Shopify Liquid, HTML, CSS and a little JavaScript (Horizon's own components)
+- Product metafields and a Directors metaobject
+- Shopify Search & Discovery app (storefront filter for format)
+- Shopify CLI for local development
+- Git and GitHub
+
+Shopify handles products, inventory, cart, checkout and hosting. There is no custom backend or database.
+
+## Data model
+
+### Product metafields (namespace `custom`)
+
+| Key | Type | Used for |
+|---|---|---|
+| `format` | Single line text | "DVD" or "Blu-ray". Also the storefront filter. |
+| `condition` | Single line text | e.g. "Very good" |
+| `release_year` | Integer | e.g. 2003 |
+| `runtime` | Integer (minutes) | shown as "1 h 42 min" |
+| `director` | Metaobject reference (Directors) | links a film to its director |
+| `archive_note` | Multi-line text | quote in the product page's archive note box |
+| `archive_note_author` | Single line text | e.g. "Archive employee" |
+
+### Directors metaobject (type `directors`)
+
+| Field | Type |
+|---|---|
+| `name` | Single line text |
+| `portrait` | Image |
+| `biography` | Rich text |
+| `lead` | Multi-line text (optional) |
+| `born` | Integer (optional) |
+| `country` | Single line text (optional) |
+
+The metaobject has web pages enabled, so each director gets a page at `/pages/directors/<handle>` (template `templates/metaobject/directors.json`).
+
+**Filmography:** Liquid cannot look up "all products with this director" directly, so the theme scans the first 50 products of `collections.all` and keeps those whose director matches. This is fine for a small, curated catalogue.
+
+Empty or missing values are hidden everywhere, so a film without a runtime or a director without a portrait still renders cleanly.
+
+## Project structure
+
+The theme follows the standard Shopify theme layout. Files added for this project:
+
+```
+sections/
+  archive-introduction.liquid   homepage hero
+  archive-marquee.liquid        dark quote band
+  featured-films.liquid         homepage film selection
+  archive-quote.liquid          photo + quote section
+  director-focus.liquid         one highlighted director
+  archive-newsletter.liquid     newsletter band (Horizon email-signup block)
+  collection-hero.liquid        Films page hero
+  collection-toolbar.liquid     format buttons + sorting
+  archive-note.liquid           short editorial quote between two rules
+  archive-back-link.liquid      "← Back to archive" on the product page
+  product-archive-note.liquid   per-film quote box
+  product-director-films.liquid "More from [director]"
+  main-directors.liquid         directors overview
+  main-director.liquid          director filmography
+  director-hero.liquid          director page hero
+  director-portrait.liquid      director lead text and biography
+  contact-archive.liquid        contact page
+
+blocks/
+  film-title.liquid             product title and description
+  film-price.liquid             price and "Only one copy" badge
+  film-details.liquid           wrapper for snippets/film-details.liquid
+  film-buy-note.liquid          note under the buy button, buy button styles
+
+snippets/
+  film-card.liquid              reusable film card
+  film-card-meta.liquid         card text on the Films page (Horizon cards)
+  film-details.liquid           director/format/year/runtime/condition list
+  quote-box.liquid              coloured quote box
+  archive-note.liquid           quote between two rules
+
+templates/
+  page.directors.json           directors overview page
+  metaobject/directors.json     director page
+```
+
+Small, documented changes were also made to Horizon files, for example `sections/header.liquid` (header layout and mobile menu), `blocks/_header-logo.liquid` (text logo), `blocks/_header-menu.liquid` (active state for links with a query string) and `locales/en.default.json` (button text "Add this copy to cart").
 
 ## Getting started
 
-We recommend using the Skeleton Theme as a starting point for a theme development project. [Learn more on Shopify.dev](https://shopify.dev/themes/getting-started/create).
+### Prerequisites
 
-To create a new theme project based on Horizon:
+- A Shopify store (a development store from the Shopify Partner Dashboard works)
+- [Shopify CLI](https://shopify.dev/docs/storefronts/themes/tools/cli)
+- Git and Node.js (required by Shopify CLI)
 
-```sh
-git clone https://github.com/Shopify/horizon.git
-```
-
-Install the [Shopify CLI](https://shopify.dev/docs/storefronts/themes/tools/cli) to connect your local project to a Shopify store. Learn about the [theme developer tools](https://shopify.dev/docs/storefronts/themes/tools) available, and the suggested [developer tools](#developer-tools) below.
-
-Please note that the `main` branch may include code for features not yet released. You may encounter Liquid API properties that are not publicly documented, but will be when the feature is officially rolled out.
-
-### Shopify Theme Store development
-
-If you're building a theme for the Shopify Theme Store, then do not use Horizon as a starting point. Themes based on, derived from, or incorporating Horizon are not eligible for submission to to the Shopify Theme Store. Use the [Skeleton Theme](https://github.com/Shopify/skeleton-theme) instead.
-
-## Staying up to date with Horizon changes
-
-Say you're building a new theme off Horizon but you still want to be able to pull in the latest changes, you can add a remote `upstream` pointing to this Horizon repository.
-
-1. Navigate to your local theme folder.
-2. Verify the list of remotes and validate that you have both an `origin` and `upstream`:
+### Run the theme locally
 
 ```sh
-git remote -v
+git clone https://github.com/EddieJohanssonn3000/The-Cinema-Archive.git
+cd The-Cinema-Archive
+shopify theme dev --store <your-store>.myshopify.com --theme-editor-sync
 ```
 
-3. If you don't see an `upstream`, you can add one that points to Shopify's Horizon repository:
+Open `http://127.0.0.1:9292`. If the store is password protected, enter the store password once. `--theme-editor-sync` writes changes made in the Theme Editor back to your local JSON files.
+
+The theme only looks right once the store has the metafields, the Directors metaobject and some content (see below).
+
+### Upload the theme to a store
+
+Push to a new, unpublished theme first, check it, then publish it:
 
 ```sh
-git remote add upstream https://github.com/Shopify/horizon.git
+shopify theme push --unpublished --theme "Cinema Archive"
 ```
 
-4. Pull in the latest Horizon changes into your repository:
+## Store setup (Shopify Admin)
 
-```sh
-git fetch upstream
-git pull upstream main
-```
+These parts live in the store, not in this repository:
 
-## Developer tools
+1. **Product metafield definitions** (Settings → Metafields and metaobjects → Products) with the keys and types listed in [Data model](#data-model).
+2. **Directors metaobject definition** with the fields above, with web pages (online store) enabled.
+3. **Search & Discovery app** → Filters → add a filter for the product metafield *Format*.
+4. **Pages:** a page *Directors* using the template `page.directors`, and a *Contact* page.
+5. **Main menu:** Home, Films (`/collections/all`), Directors and Contact.
+6. **Products:** one product per physical copy, inventory tracked with quantity 1, metafields filled in.
+7. **Sender email** (Settings → Notifications) for messages from the contact form.
 
-There are a number of really useful tools that the Shopify Themes team uses during development. Horizon is already set up to work with these tools.
+## Working with the Theme Editor
 
-### Shopify CLI
+Section settings and the order of sections are stored in JSON files in `templates/` and `sections/*-group.json`.
 
-[Shopify CLI](https://shopify.dev/docs/storefronts/themes/tools/cli) helps you build Shopify themes faster and is used to automate and enhance your local development workflow. It comes bundled with a suite of commands for developing Shopify themes—everything from working with themes on a Shopify store (e.g. creating, publishing, deleting themes) or launching a development server for local theme development.
+- Check `git status` after saving in the Theme Editor. If a template you changed is not listed, pull it from the store before committing.
+- Stop `shopify theme dev` before switching Git branches or merging. Otherwise the CLI can upload files mid-switch and overwrite settings in the store.
+- If the CLI asks whether to keep the local or remote version, compare first; the local version (from Git) is usually the right one.
 
-You can follow this [quick start guide for theme developers](https://shopify.dev/docs/themes/tools/cli) to get started.
+## Git workflow
 
-### Theme Check
+- `main`: stable, tested code
+- `dev`: finished features collected before release
+- `feature/<name>`: one branch per feature, merged into `dev` when done
 
-We recommend using [Theme Check](https://github.com/shopify/theme-check) as a way to validate and lint your Shopify themes.
+## Testing
 
-We've added Theme Check to Horizon's [list of VS Code extensions](/.vscode/extensions.json) so if you're using Visual Studio Code as your code editor of choice, you'll be prompted to install the [Theme Check VS Code](https://marketplace.visualstudio.com/items?itemName=Shopify.theme-check-vscode) extension upon opening VS Code after you've forked and cloned Horizon.
+Checked for each page:
 
-You can also run it from a terminal with the following Shopify CLI command:
+- Screen widths 390–440, 1024, 1280, 1440 and 1920 px (Chrome DevTools, device type *Desktop* for desktop sizes)
+- Empty and missing data (no director, no runtime, no portrait, no archive note)
+- Cart and checkout, sold-out products, the contact form and the newsletter form
+- `shopify theme check` (no errors)
 
-```bash
-shopify theme check
-```
+## Known limitations
 
-You can follow the [theme check documentation](https://shopify.dev/docs/storefronts/themes/tools/theme-check) for more details.
+- Filmographies and "More from…" scan the first 50 products only.
+- On touch devices with wide screens (e.g. iPad) Horizon switches the header to its drawer menu, which is not fully styled yet.
+- The Directors menu link uses `?view=directors` until the theme is published and the page can be assigned the `page.directors` template.
+- The footer still uses Horizon's default design.
+- Sold-out copies stay visible in listings.
 
-#### Shopify/theme-check-action
+## Use of AI
 
-Horizon runs [Theme Check](#Theme-Check) on every commit via [Shopify/theme-check-action](https://github.com/Shopify/theme-check-action).
+AI tools were used as a pair programmer and tutor during the project.
 
-## Contributing
+**Tools**
+- **Claude Code** (Anthropic), in VS Code, for most of the development work
+- **GitHub Copilot**, for some smaller fixes, for example the header dividers
 
-We are not accepting contributions to Horizon at this time.
+**What AI was used for**
+- Writing and refactoring Liquid, CSS and section schemas based on my descriptions and the Figma design
+- Explaining Liquid, Shopify concepts (metafields, metaobjects, theme blocks, storefront filters) and the reasoning behind each change, so I could understand and maintain the code
+- Reading Horizon's existing code before changes, so custom code reuses Horizon's patterns instead of rewriting them
+- Reviewing diffs before commits, and finding risks and bugs (for example a whitespace bug in the runtime and an HTML-escaping bug in a heading)
+- Troubleshooting Shopify CLI and Theme Editor sync problems
 
-## License
+**What I did myself**
+- The concept, the visual design in Figma and all design decisions
+- Setting up the store in Shopify Admin: metafield and metaobject definitions, products, directors, pages, menus and the Search & Discovery filter
+- Choosing between the options AI proposed, and deciding what to build and what to leave out
+- Git: committing, branching, merging and reviewing what goes into each commit
 
-Copyright (c) 2025-present Shopify Inc. See [LICENSE](/LICENSE.md) for further details.
+**How I worked with AI**
+- One small step at a time: the AI explained the plan and the files involved before changing anything, and asked before larger changes.
+- Every change was checked in the browser and with `shopify theme check` before it was committed.
+- Facts in the store content (years, runtimes, biographies) are my responsibility to verify, since AI can get them wrong.
+
+## Credits and license
+
+- Based on [Horizon](https://github.com/Shopify/horizon) by Shopify. Horizon's license is in [LICENSE.md](LICENSE.md). It restricts how themes derived from Horizon may be distributed, so this repository is not intended for public distribution or reuse as a theme product.
+- Photo in the homepage quote section: Jeremy Yap / Unsplash.
+- Film posters and director portraits belong to their respective rights holders and are used for educational purposes only.
+
+
+- Built by Eddie Johansson.
