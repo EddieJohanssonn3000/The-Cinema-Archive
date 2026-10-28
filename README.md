@@ -219,7 +219,7 @@ AI tools were used as a pair programmer and tutor during the project.
 - **GitHub Copilot**, for some smaller fixes, for example the header dividers
 
 **What AI was used for**
-- Writing and refactoring Liquid, CSS and section schemas based on my descriptions and the Figma design
+- Recommending, writing and refactoring Liquid, CSS and section schemas based on my descriptions and the Figma design
 - Explaining Liquid, Shopify concepts (metafields, metaobjects, theme blocks, storefront filters) and the reasoning behind each change, so I could understand and maintain the code
 - Reading Horizon's existing code before changes, so custom code reuses Horizon's patterns instead of rewriting them
 - Reviewing diffs before commits, and finding risks and bugs (for example a whitespace bug in the runtime and an HTML-escaping bug in a heading)
@@ -232,7 +232,7 @@ AI tools were used as a pair programmer and tutor during the project.
 - Git: committing, branching, merging and reviewing what goes into each commit
 
 **How I worked with AI**
-- One small step at a time: the AI explained the plan and the files involved before changing anything, and asked before larger changes.
+- One small step at a time: the AI explained the plan and the files involved before changing anything, and asked for my approval before changes.
 - Every change was checked in the browser and with `shopify theme check` before it was committed.
 - Facts in the store content (years, runtimes, biographies) are my responsibility to verify, since AI can get them wrong.
 
