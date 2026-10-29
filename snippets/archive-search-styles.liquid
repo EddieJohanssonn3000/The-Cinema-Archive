@@ -251,6 +251,7 @@
     --archive-ink: #191919;
     --archive-cream: #f5eedc;
     --archive-blue: #3155e8;
+    --archive-yellow: #f2d46d;
 
     /* The theme's text colour is blue; use ink on this page only */
     --color-foreground: var(--archive-ink);
@@ -261,6 +262,18 @@
     --color-input-background: var(--archive-cream);
 
     color: var(--archive-ink);
+  }
+
+  /* Heading and search field in a yellow framed box, like the quote box */
+  main[data-template='search'] .search-page__header {
+    margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.5rem);
+    background: var(--archive-yellow);
+    border: 2px solid var(--archive-ink);
+  }
+
+  main[data-template='search'] .search-page__header search-page-input-component {
+    margin-block-end: 0;
   }
 
   main[data-template='search'] .search-page-input {
