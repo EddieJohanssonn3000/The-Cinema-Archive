@@ -58,11 +58,21 @@
         "padding-block-end": 0
       }
     },
+    "collection_toolbar_MD74HP": {
+      "type": "collection-toolbar",
+      "name": "Collection toolbar",
+      "settings": {
+        "all_label": "All formats",
+        "filter_label": "Filter by format",
+        "sort_label": "Sort by"
+      }
+    },
     "main": {
       "type": "search-results",
       "blocks": {
         "filters": {
           "type": "filters",
+          "disabled": true,
           "static": true,
           "settings": {
             "enable_filtering": true,
@@ -205,6 +215,7 @@
   },
   "order": [
     "search",
+    "collection_toolbar_MD74HP",
     "main"
   ]
 }

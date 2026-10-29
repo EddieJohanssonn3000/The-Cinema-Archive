@@ -1,7 +1,7 @@
 {% doc %}
-  Archive styling for Horizon's search modal (predictive search).
-  Rendered from snippets/search-modal.liquid. Every rule is scoped to
-  #search-modal so the search page and other dialogs are not affected.
+  Archive styling for Horizon's search modal (predictive search) and the /search page.
+  Rendered from snippets/search-modal.liquid, which is on every page. Every rule is
+  scoped to #search-modal or main[data-template='search'] so other pages are not affected.
 {% enddoc %}
 
 {% stylesheet %}
@@ -244,5 +244,46 @@
 
   #search-modal .predictive-search__search-button:hover {
     box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+  }
+
+  /* Search page: layout/theme.liquid sets data-template on <main> */
+  main[data-template='search'] {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+
+    /* The theme's text colour is blue; use ink on this page only */
+    --color-foreground: var(--archive-ink);
+    --color-foreground-rgb: 25 25 25;
+    --color-input-text: var(--archive-ink);
+    --color-input-text-rgb: 25 25 25;
+    --color-input-border: var(--archive-ink);
+    --color-input-background: var(--archive-cream);
+
+    color: var(--archive-ink);
+  }
+
+  main[data-template='search'] .search-page-input {
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.35rem;
+  }
+
+  main[data-template='search'] .search-page-input::placeholder {
+    color: rgb(25 25 25 / 0.65);
+  }
+
+  /* Focus indicator: blue border, as in the search modal */
+  main[data-template='search'] .search-page-input:focus-visible {
+    outline: none;
+    border-color: var(--archive-blue);
+  }
+
+  /* Align the toolbar with the search field and cards. Horizon centres page content in a
+     column of --page-content-width with at least --page-margin on each side. */
+  main[data-template='search'] .collection-toolbar {
+    padding-inline: max(var(--page-margin), (100% - var(--page-content-width)) / 2);
+    padding-block-end: 0.5rem;
   }
 {% endstylesheet %}

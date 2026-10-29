@@ -8,19 +8,46 @@
 
   To avoid showing filters twice, turn off filtering and sorting in the product grid's
   filter block in the Theme Editor.
+
+  The same section also works on the search page. There it reads the search object
+  instead of the collection, and every link keeps the search terms (?q=) and type=product.
+  The search terms come from the visitor, so they are always url_encoded in links and
+  escaped in form fields.
 {% endcomment %}
 
 {% liquid
-  # Find the format filter among the collection's filters
+  assign is_search = false
+  if request.page_type == 'search'
+    assign is_search = true
+  endif
+
+  if is_search
+    assign source_filters = search.filters
+    assign sort_options = search.sort_options
+    assign active_sort = search.sort_by
+    assign current_sort = search.sort_by | default: search.default_sort_by
+    assign terms_encoded = search.terms | url_encode
+    assign base_url = routes.search_url | append: '?type=product&options%5Bprefix%5D=last&q=' | append: terms_encoded
+    assign query_join = '&'
+    assign form_action = routes.search_url
+  else
+    assign source_filters = collection.filters
+    assign sort_options = collection.sort_options
+    assign active_sort = collection.sort_by
+    assign current_sort = collection.sort_by | default: collection.default_sort_by
+    assign base_url = collection.url
+    assign query_join = '?'
+    assign form_action = collection.url
+  endif
+
+  # Find the format filter among the filters
   assign format_filter = null
-  for filter in collection.filters
+  for filter in source_filters
     if filter.param_name contains 'custom.format'
       assign format_filter = filter
     endif
   endfor
 
-  assign sort_options = collection.sort_options
-  assign current_sort = collection.sort_by | default: collection.default_sort_by
   assign show_pills = false
   if format_filter != null and format_filter.values.size > 0
     assign show_pills = true
@@ -28,6 +55,17 @@
   assign show_sort = false
   if sort_options.size > 1
     assign show_sort = true
+  endif
+
+  # Nothing to sort when a search has no results, and no toolbar before anything is searched
+  if is_search
+    if search.results_count == 0
+      assign show_sort = false
+    endif
+    if search.terms == blank
+      assign show_pills = false
+      assign show_sort = false
+    endif
   endif
 %}
 
@@ -38,11 +76,11 @@
         {% liquid
           # Keep the chosen sorting when a format button is clicked
           assign sort_param = ''
-          assign all_url = collection.url
-          if collection.sort_by != blank
-            assign sort_encoded = collection.sort_by | url_encode
+          assign all_url = base_url
+          if active_sort != blank
+            assign sort_encoded = active_sort | url_encode
             assign sort_param = '&sort_by=' | append: sort_encoded
-            assign all_url = collection.url | append: '?sort_by=' | append: sort_encoded
+            assign all_url = base_url | append: query_join | append: 'sort_by=' | append: sort_encoded
           endif
         %}
 
@@ -59,7 +97,7 @@
         {% for value in format_filter.values %}
           {% liquid
             assign value_encoded = value.value | url_encode
-            assign value_url = collection.url | append: '?' | append: value.param_name | append: '=' | append: value_encoded | append: sort_param
+            assign value_url = base_url | append: query_join | append: value.param_name | append: '=' | append: value_encoded | append: sort_param
           %}
           <a
             class="collection-toolbar__pill{% if value.active %} collection-toolbar__pill--active{% endif %}"
@@ -75,8 +113,13 @@
     {% endif %}
 
     {% if show_sort %}
-      <form class="collection-toolbar__sort" method="get" action="{{ collection.url }}">
-        {% comment %} Keep the active format filter when the sorting changes {% endcomment %}
+      <form class="collection-toolbar__sort" method="get" action="{{ form_action }}">
+        {% comment %} Keep the search and the active format filter when the sorting changes {% endcomment %}
+        {% if is_search %}
+          <input type="hidden" name="q" value="{{ search.terms | escape }}">
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
+        {% endif %}
         {% if format_filter != null %}
           {% for active_value in format_filter.active_values %}
             <input type="hidden" name="{{ active_value.param_name }}" value="{{ active_value.value | escape }}">
