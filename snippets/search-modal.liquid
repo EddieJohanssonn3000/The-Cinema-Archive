@@ -8,6 +8,7 @@
 {% render 'pills-styles' %}
 {% render 'dialog-styles' %}
 {% render 'predictive-search-styles' %}
+{% render 'archive-search-styles' %}
 
 <script
   src="{{ 'dialog.js' | asset_url }}"
@@ -61,9 +62,9 @@
           <div class="predictive-search-form__header-inner">
             <label
               for="{{ 'cmdk-input' | default: 'Search' }}"
-              class="visually-hidden"
+              class="archive-search__label"
             >
-              {{- 'content.search_input_label' | t -}}
+              Search the archive
             </label>
             <input
               class="search-input"

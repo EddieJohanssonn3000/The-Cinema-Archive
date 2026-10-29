@@ -1,0 +1,242 @@
+{% doc %}
+  Archive styling for Horizon's search modal (predictive search).
+  Rendered from snippets/search-modal.liquid. Every rule is scoped to
+  #search-modal so the search page and other dialogs are not affected.
+{% enddoc %}
+
+{% stylesheet %}
+  #search-modal {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+    --archive-yellow: #f2d46d;
+
+    /* Horizon reads these for its own rounded corners */
+    --search-border-radius: 0;
+    --style-border-radius-popover: 0;
+    --style-border-radius-inputs: 0;
+  }
+
+  /* Swap the popover colour scheme (blue text) for archive ink on cream */
+  #search-modal .predictive-search {
+    --color-foreground: var(--archive-ink);
+    --color-foreground-rgb: 25 25 25;
+    --color-background: var(--archive-cream);
+    --color-background-rgb: 245 238 220;
+    --color-input-background: var(--archive-cream);
+    --color-border: var(--archive-ink);
+    --resource-card-corner-radius: 0;
+
+    color: var(--archive-ink);
+  }
+
+  /* Frame: square corners, ink border and hard offset shadow, like the hero panel */
+  #search-modal .search-modal__content {
+    background: var(--archive-cream);
+    border-radius: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    #search-modal .search-modal__content[open] {
+      border: 2px solid var(--archive-ink);
+      box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+    }
+  }
+
+  #search-modal .search-modal__content::backdrop {
+    background: rgb(25 25 25 / 0.55);
+  }
+
+  /* Search field */
+  #search-modal .predictive-search-form__header {
+    align-items: stretch;
+    padding: 0;
+    border-bottom: 2px solid var(--archive-ink);
+    background: var(--archive-cream);
+  }
+
+  /* Focus indicator: the line under the field turns blue while typing */
+  #search-modal .predictive-search-form__header:focus-within {
+    border-bottom-color: var(--archive-blue);
+  }
+
+  /* Horizon draws its own divider here; the close cell has a border instead */
+  #search-modal .predictive-search-form__header::before {
+    content: none;
+  }
+
+  #search-modal .predictive-search-form__header-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'label label label'
+      'icon input reset';
+    align-items: center;
+    column-gap: 0.75rem;
+    padding: 1rem 1.5rem 1.1rem;
+    border: 0;
+    background: transparent;
+  }
+
+  #search-modal .archive-search__label {
+    grid-area: label;
+    margin-block-end: 0.35rem;
+    font-family: var(--font-body--family);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #search-modal .predictive-search__icon {
+    grid-area: icon;
+    position: static;
+    color: var(--archive-ink);
+  }
+
+  #search-modal input.search-input {
+    grid-area: input;
+    padding: 0.25rem 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+    line-height: 1.1;
+    color: var(--archive-ink);
+  }
+
+  #search-modal input.search-input::placeholder {
+    color: rgb(25 25 25 / 0.45);
+  }
+
+  #search-modal .predictive-search__reset-button {
+    grid-area: reset;
+    margin: 0;
+    color: var(--archive-ink);
+  }
+
+  /* Close button as a square cell, like the cells in the header */
+  #search-modal .predictive-search__close-modal-button {
+    align-self: stretch;
+    width: 4.5rem;
+    height: auto;
+    margin: 0;
+    border-inline-start: 2px solid var(--archive-ink);
+    border-radius: 0;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  #search-modal .predictive-search__close-modal-button:hover {
+    --button-background-color: var(--archive-yellow);
+  }
+
+  #search-modal .predictive-search__close-modal-button:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: -4px;
+  }
+
+  #search-modal .predictive-search__close-modal-button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* Section headings ("Recently viewed", "Products") */
+  #search-modal .predictive-search-results__title {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #search-modal .predictive-search-results__clear.button-unstyled {
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    opacity: 1;
+  }
+
+  /* Query suggestion pills, styled like the film card tags */
+  #search-modal .predictive-search-results__pill {
+    border: 1.5px solid var(--archive-ink);
+    border-radius: 0;
+    font-family: var(--font-accent--family);
+  }
+
+  /* Collection and page results */
+  #search-modal .predictive-search-results__card:not(.predictive-search-results__card--product) {
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+  }
+
+  /* Film cards, matching snippets/film-card.liquid */
+  #search-modal :is(.resource-card__image, .resource-card__image-placeholder) {
+    aspect-ratio: 2 / 3;
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+  }
+
+  #search-modal .resource-card__title {
+    font-family: var(--font-heading--family);
+    font-size: 1.15rem;
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  #search-modal .resource-card__content .price {
+    font-family: var(--font-accent--family);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  /* Hover: underline the title instead of Horizon's grey background */
+  #search-modal .predictive-search-results__card--product:is(:hover, :focus-visible, [aria-selected='true'].keyboard-focus, :has(.resource-card:focus-visible)) {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  #search-modal .predictive-search-results__card--product:hover .resource-card__title {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  /* Keyboard focus needs a visible indicator */
+  #search-modal .predictive-search-results__card--product:is([aria-selected='true'].keyboard-focus, :has(.resource-card:focus-visible)) {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 4px;
+  }
+
+  /* "View all" button, styled like "Explore the collection" */
+  #search-modal .predictive-search__search-button {
+    --button-color: var(--archive-cream);
+    --button-background-color: var(--archive-blue);
+
+    display: flex;
+    align-items: stretch;
+    padding: 0 0 0 1.25rem;
+    gap: 1.25rem;
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    line-height: 3rem;
+    text-transform: uppercase;
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    box-shadow: 0.35rem 0.35rem 0 var(--archive-ink);
+  }
+
+  #search-modal .predictive-search__search-button::after {
+    content: '↗';
+    content: '↗' / '';
+    width: 3rem;
+    text-align: center;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border-inline-start: 2px solid var(--archive-ink);
+    font-weight: 400;
+  }
+
+  #search-modal .predictive-search__search-button:hover {
+    box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+  }
+{% endstylesheet %}
