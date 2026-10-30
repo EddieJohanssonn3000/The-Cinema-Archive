@@ -34,10 +34,10 @@
       "type": "featured-films",
       "name": "Featured films",
       "settings": {
-        "label": "01 / The edit",
+        "label": "staff recommendations",
         "heading": "<p>Films worth</p><p><em>keeping.</em></p>",
         "description": "<p>Four singular films, rescued from the shelf and ready for their next close-up.</p>",
-        "collection": "",
+        "collection": "the-edit",
         "max_products": 4,
         "button_label": "View all [count] films"
       }
