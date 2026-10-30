@@ -1258,14 +1258,17 @@
     padding-inline: 1rem;
   }
 
+  /* Desktop layout only in menu mode. Horizon switches to drawer mode on touch screens
+     and when the menu does not fit (see setHeaderMenuStyle in assets/utilities.js);
+     those get Horizon's mobile header in archive colours instead of a broken mix. */
   @media screen and (min-width: 750px) {
-    #header-component .header__row--top.section--page-width {
+    #header-component[data-menu-style='menu'] .header__row--top.section--page-width {
       margin-inline: 0;
     }
 
     /* Edge to edge on every screen width: span all columns of the section grid
        (left margin, content, right margin) instead of shifting the row sideways. */
-    #header-component .header__row--top .header__columns {
+    #header-component[data-menu-style='menu'] .header__row--top .header__columns {
       --header-template-columns: 24% 40% 36%;
       grid-column: 1 / -1;
       grid-template-areas: 'left center right';
@@ -1277,11 +1280,11 @@
       padding: 0 !important;
     }
 
-    #header-component .header__row--top .header__column--left {
+    #header-component[data-menu-style='menu'] .header__row--top .header__column--left {
       display: contents;
     }
 
-    #header-component .header__row--top .header-logo {
+    #header-component[data-menu-style='menu'] .header__row--top .header-logo {
       grid-column: 1;
       grid-row: 1;
       justify-content: flex-start;
@@ -1289,32 +1292,32 @@
       padding-inline: clamp(1.5rem, 2.25vw, 2.75rem);
     }
 
-    #header-component .header__row--top .header-menu {
+    #header-component[data-menu-style='menu'] .header__row--top .header-menu {
       grid-column: 2;
       grid-row: 1;
       width: 100%;
       height: 100%;
     }
 
-    #header-component .header__row--top .header-menu__inner,
-    #header-component .header__row--top .menu-list {
+    #header-component[data-menu-style='menu'] .header__row--top .header-menu__inner,
+    #header-component[data-menu-style='menu'] .header__row--top .menu-list {
       width: 100%;
       height: 100%;
     }
 
-    #header-component .header__row--top .overflow-menu {
+    #header-component[data-menu-style='menu'] .header__row--top .overflow-menu {
       width: 100%;
       height: 100%;
     }
 
-    #header-component .header__row--top .menu-list__list-item {
+    #header-component[data-menu-style='menu'] .header__row--top .menu-list__list-item {
       position: relative;
       flex: 1 1 0;
       width: 100%;
       min-width: 0;
     }
 
-    #header-component .header__row--top .menu-list__list-item::after {
+    #header-component[data-menu-style='menu'] .header__row--top .menu-list__list-item::after {
       content: '';
       position: absolute;
       inset-block: 0;
@@ -1325,7 +1328,7 @@
       z-index: 1;
     }
 
-    #header-component .header__row--top .menu-list__list-item:first-child::before {
+    #header-component[data-menu-style='menu'] .header__row--top .menu-list__list-item:first-child::before {
       content: '';
       position: absolute;
       inset-block: 0;
@@ -1336,7 +1339,7 @@
       z-index: 1;
     }
 
-    #header-component .header__row--top .menu-list__link {
+    #header-component[data-menu-style='menu'] .header__row--top .menu-list__link {
       display: flex;
       width: 100%;
       height: 100%;
@@ -1346,7 +1349,7 @@
       font-size: clamp(1.1rem, 1.5vw, 1.85rem);
     }
 
-    #header-component .header__row--top .header__column--right {
+    #header-component[data-menu-style='menu'] .header__row--top .header__column--right {
       grid-column: 3;
       grid-row: 1;
       width: 100%;
@@ -1357,7 +1360,7 @@
       padding-inline-end: 0;
     }
 
-    #header-component .header__row--top .header-actions {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions {
       flex: 0 0 auto;
       width: auto;
       margin-inline-start: 0;
@@ -1366,27 +1369,27 @@
     }
 
     /* Search icon sits right after the menu; auto end margin pushes the cart to the far edge */
-    #header-component .header__row--top .search-action {
+    #header-component[data-menu-style='menu'] .header__row--top .search-action {
       flex: 0 0 auto;
       margin-inline: 0 auto;
       padding-inline: clamp(1rem, 2vw, 2rem);
     }
 
-    #header-component .header__row--top .search-action .header-actions__action {
+    #header-component[data-menu-style='menu'] .header__row--top .search-action .header-actions__action {
       align-items: center;
     }
 
-    #header-component .header__row--top .search-action .header-actions__action svg {
+    #header-component[data-menu-style='menu'] .header__row--top .search-action .header-actions__action svg {
       width: clamp(1.5rem, 2vw, 2rem);
       height: clamp(1.5rem, 2vw, 2rem);
     }
 
-    #header-component .header__row--top header-actions .header-actions__action:not(:has(.header-actions__cart-icon)),
-    #header-component .header__row--top .header-actions__action:has(.header-actions__cart-icon) .svg-wrapper {
+    #header-component[data-menu-style='menu'] .header__row--top header-actions .header-actions__action:not(:has(.header-actions__cart-icon)),
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__action:has(.header-actions__cart-icon) .svg-wrapper {
       display: none;
     }
 
-    #header-component .header__row--top .header-actions__action:has(.header-actions__cart-icon) {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__action:has(.header-actions__cart-icon) {
       display: flex;
       width: auto;
       height: 100%;
@@ -1396,7 +1399,7 @@
       border-inline-start: 2px solid #191919;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon {
       display: flex;
       align-items: center;
       gap: clamp(0.75rem, 1.5vw, 1.5rem);
@@ -1406,11 +1409,11 @@
       text-transform: uppercase;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon > span:first-child {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon > span:first-child {
       display: inline !important;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon .cart-bubble {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon .cart-bubble {
       position: relative !important;
       inset: auto !important;
       width: clamp(2.5rem, 3.5vw, 3.75rem);
@@ -1421,17 +1424,17 @@
       color: #f5eedc;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon .cart-bubble__background {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon .cart-bubble__background {
       display: block;
       background: #e94b35;
       border-radius: 50%;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon .cart-bubble__text-count.hidden {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon .cart-bubble__text-count.hidden {
       display: inline;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon .cart-bubble:has(.cart-bubble__text-count.hidden) {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon .cart-bubble:has(.cart-bubble__text-count.hidden) {
       display: flex !important;
       visibility: visible;
       clip: auto;
@@ -1439,7 +1442,7 @@
       overflow: visible;
     }
 
-    #header-component .header__row--top .header-actions__cart-icon .cart-bubble:has(.cart-bubble__text-count.hidden)::after {
+    #header-component[data-menu-style='menu'] .header__row--top .header-actions__cart-icon .cart-bubble:has(.cart-bubble__text-count.hidden)::after {
       content: '00';
     }
   }
