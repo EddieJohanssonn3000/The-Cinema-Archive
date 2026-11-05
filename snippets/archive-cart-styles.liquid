@@ -1,0 +1,231 @@
+{% doc %}
+  Archive styling for the cart drawer and the /cart page. Both use Horizon's cart-products
+  and cart-summary snippets, so they share these rules.
+  Rendered from snippets/cart-drawer.liquid, which is on every page. Every rule is scoped to
+  #cart-drawer or main[data-template='cart'] so other pages are not affected.
+{% enddoc %}
+
+{% stylesheet %}
+  /* The drawer's own colour scheme sits on the dialog, so the tokens must be set there */
+  :is(#cart-drawer .theme-drawer__dialog, main[data-template='cart']) {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
+    --archive-yellow: #f2d46d;
+
+    --color-foreground: var(--archive-ink);
+    --color-foreground-rgb: 25 25 25;
+    --color-foreground-subdued: var(--archive-ink);
+    --color-background: var(--archive-cream);
+    --color-background-rgb: 245 238 220;
+    --color-border: var(--archive-ink);
+    --color-input-text: var(--archive-ink);
+    --color-input-text-rgb: 25 25 25;
+    --color-input-border: var(--archive-ink);
+    --color-input-background: var(--archive-cream);
+    --cart-primary-font-family: var(--font-body--family);
+    --cart-secondary-font-family: var(--font-accent--family);
+
+    color: var(--archive-ink);
+  }
+
+  /* Drawer frame */
+  #cart-drawer .theme-drawer__dialog {
+    background: var(--archive-cream);
+    border-inline-start: 2px solid var(--archive-ink);
+    border-radius: 0;
+  }
+
+  #cart-drawer .theme-drawer__dialog::backdrop {
+    background: rgb(25 25 25 / 0.55);
+  }
+
+  #cart-drawer .theme-drawer__header {
+    border-block-end: 2px solid var(--archive-ink);
+  }
+
+  #cart-drawer .theme-drawer__close-button {
+    color: var(--archive-ink);
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  #cart-drawer .theme-drawer__close-button:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 2px;
+  }
+
+  #cart-drawer .cart-drawer__items {
+    padding-block-start: var(--padding-xl);
+  }
+
+  /* Horizon fades the top of the summary with a mask, which would hide this border */
+  #cart-drawer .cart-drawer__summary {
+    border-block-start: 2px solid var(--archive-ink);
+    mask-image: none;
+  }
+
+  /* Headings: Horizon colours them with var(--color) from the heading settings (blue) */
+  :is(#cart-drawer .theme-drawer__title, main[data-template='cart'] .cart-title h1) {
+    color: var(--archive-ink);
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  /* The item count is already shown in the header */
+  :is(#cart-drawer .theme-drawer__badge, main[data-template='cart'] .cart-title .cart-bubble) {
+    display: none;
+  }
+
+  /* Film rows */
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__table-row:not(:last-child) {
+    border-block-end: 2px solid var(--archive-ink);
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__media-container {
+    aspect-ratio: 2 / 3;
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__media-image {
+    height: 100%;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__title {
+    color: var(--archive-ink);
+    font-family: var(--font-heading--family);
+    font-size: 1.35rem;
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__details {
+    color: var(--archive-ink);
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__price {
+    font-family: var(--font-accent--family);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  /* Every film is a single copy: only the remove button is needed, and the unit price
+     would just repeat the line price */
+  :is(#cart-drawer, main[data-template='cart']) :is(.cart-items__quantity .quantity-selector-wrapper, .cart-items__unit-price-wrapper) {
+    display: none;
+  }
+
+  /* Horizon gives the quantity its own column on wide carts; keep remove under the title */
+  main[data-template='cart'] .cart-items__table-row {
+    grid-template-columns: clamp(4rem, 15cqi, 7.5rem) minmax(0, 1fr) minmax(var(--cart-item-price-width), auto);
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+      'media details price'
+      'media quantity price'
+      'media error error';
+  }
+
+  main[data-template='cart'] .cart-items__quantity {
+    grid-area: quantity;
+    margin-block-start: 0.5rem;
+  }
+
+  main[data-template='cart'] .cart-items__price {
+    grid-area: price;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__remove {
+    margin-inline-start: -0.75rem;
+    color: var(--archive-ink);
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__remove:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: -4px;
+  }
+
+  /* Total. Horizon draws a line above it when the discount field is off */
+  :is(#cart-drawer, main[data-template='cart']) .cart-totals {
+    padding-block-start: 0;
+    border-block-start: none;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-totals__total-label {
+    font-family: var(--font-heading--family);
+    font-size: 1.35rem;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart-totals__total-value {
+    font-family: var(--font-accent--family);
+    font-weight: 700;
+  }
+
+  /* Check out, styled like "Explore the collection" */
+  :is(#cart-drawer, main[data-template='cart']) .cart__ctas {
+    padding-inline-end: 0.45rem;
+    padding-block-end: 0.45rem;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart__ctas .cart__checkout-button {
+    --button-color: var(--archive-cream);
+    --button-background-color: var(--archive-blue);
+
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    height: auto;
+    padding: 0;
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    box-shadow: 0.45rem 0.45rem 0 var(--archive-ink);
+    font-family: var(--font-body--family);
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart__checkout-button .button-text {
+    padding: 1rem 1.25rem;
+  }
+
+  /* \FE0E keeps the arrow as text; iOS would otherwise show it as an emoji */
+  :is(#cart-drawer, main[data-template='cart']) .cart__checkout-button::after {
+    content: '\2197\FE0E';
+    content: '\2197\FE0E' / '';
+    display: grid;
+    flex: 0 0 3.5rem;
+    place-items: center;
+    color: var(--archive-ink);
+    background: var(--archive-cream);
+    border-inline-start: 2px solid var(--archive-ink);
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart__checkout-button:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 3px;
+  }
+
+  /* Empty cart */
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__empty-button {
+    --button-color: var(--archive-cream);
+    --button-background-color: var(--archive-blue);
+
+    color: var(--archive-cream);
+    background: var(--archive-blue);
+    border: 2px solid var(--archive-ink);
+    border-radius: 0;
+    box-shadow: 0.35rem 0.35rem 0 var(--archive-ink);
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+{% endstylesheet %}

@@ -30,7 +30,8 @@
     // Only restore on wide viewports (squeeze mode). On narrow viewports the
     // drawer is a modal overlay — let it start closed after navigation rather
     // than re-opening a fullscreen dialog the user may have left behind.
-    if (!window.matchMedia('(min-width: 990px)').matches) return;
+    // Cinema Archive: 100000px instead of 990px, same value as MODAL_BREAKPOINT in assets/theme-drawer.js.
+    if (!window.matchMedia('(min-width: 100000px)').matches) return;
 
     var dialogs = [];
     for (var i = 0; i < drawerIds.length; i++) {
@@ -83,7 +84,8 @@
   type="module"
 >
   const pageWrapper = document.querySelector('.page-wrapper');
-  const squeezeQuery = window.matchMedia('(min-width: 990px)');
+  // Cinema Archive: 100000px instead of 990px, so the page is never squeezed.
+  const squeezeQuery = window.matchMedia('(min-width: 100000px)');
 
   // ── Squeeze coordination ──
   // Listens to all drawers. Only squeezes on wide viewports.

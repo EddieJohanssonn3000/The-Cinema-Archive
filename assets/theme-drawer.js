@@ -3,8 +3,12 @@ import { trapFocus, removeTrapFocus } from '@theme/focus';
 import { isClickedOutside, lockScroll, onAnimationEnd, unlockScroll } from '@theme/utilities';
 import { getScrollTop, scrollTo } from '@theme/scroll-container';
 
-/** Viewport width below which the drawer opens as a modal overlay (no squeeze). */
-const MODAL_BREAKPOINT = 990;
+/**
+ * Viewport width below which the drawer opens as a modal overlay (no squeeze).
+ * Cinema Archive: Horizon uses 990. The high value makes the drawer a modal on every screen,
+ * so the page keeps its layout. snippets/theme-drawer.liquid has the matching value.
+ */
+const MODAL_BREAKPOINT = 100000;
 
 /**
  * A drawer that opens from the right side.
