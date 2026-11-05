@@ -149,7 +149,12 @@
     outline-offset: -4px;
   }
 
-  /* Total */
+  /* Total. Horizon draws a line above it when the discount field is off */
+  :is(#cart-drawer, main[data-template='cart']) .cart-totals {
+    padding-block-start: 0;
+    border-block-start: none;
+  }
+
   :is(#cart-drawer, main[data-template='cart']) .cart-totals__total-label {
     font-family: var(--font-heading--family);
     font-size: 1.35rem;
