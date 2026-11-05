@@ -8,6 +8,8 @@
   assign render_wrapper = render_wrapper | default: true, allow_false: true
 -%}
 
+{% render 'archive-cart-styles' %}
+
 {%- if settings.cart_type == 'drawer' and template.name != 'cart' -%}
   {% if render_wrapper %}
     <div

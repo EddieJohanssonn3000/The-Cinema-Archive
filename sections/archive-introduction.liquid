@@ -79,6 +79,17 @@
     font-style: italic;
   }
 
+  /* Horizon narrows the page while a drawer is open (from 990px), but vw sizes still follow
+     the window. One word per line without the indent keeps the heading clear of the text. */
+  .page-wrapper--drawer-open .archive-introduction__heading {
+    max-width: min-content;
+    font-size: clamp(3.5rem, 7.5vw, 8rem);
+  }
+
+  .page-wrapper--drawer-open .archive-introduction__heading p:nth-child(2) {
+    margin-inline-start: 0;
+  }
+
   .archive-introduction__panel {
     position: absolute;
     z-index: 2;
