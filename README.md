@@ -276,11 +276,27 @@ Checked for each feature before it was merged:
 
 ## Known limitations
 
+**Data**
+- The director is stored twice: as a metaobject reference (for the director pages) and as a product tag (for search). Both must be filled in for every film.
+- `format` and `condition` are free text, so a new spelling becomes an extra choice in the filter.
 - Filmographies and "More from…" scan the first 50 products only.
+
+**Search and filters**
+- Director suggestions appear in the search modal only, not on the search results page. A director matches when a word in the name starts with the search, and at most three are shown.
+- Screen readers hear the number of matching films in the search modal; directors are not included in that number, but are read out when reached with the arrow keys.
+- Shopify's search index updates a few minutes after a product is saved, so new films and changed values can take a moment to appear in search and filters.
+- When "All" is chosen in a filter dropdown, the address still contains the empty filter (for example `filter.p.m.custom.format=`). Shopify ignores it.
+- In Chrome, a dropdown shows its focus outline after a mouse click too, not only with the keyboard.
+
+**Layout**
 - On touch devices with wide screens (e.g. iPad) Horizon switches the header to its drawer menu.
-- The Directors menu link uses `?view=directors` until the theme is published and the page can be assigned the `page.directors` template.
-- The footer still uses Horizon's default design.
+- The Directors overview and the search page keep Horizon's page width, so very wide screens show empty space at the sides.
+- Removing a film on the cart page does not refresh "You may also like" until the page is reloaded.
 - Sold-out copies stay visible in listings.
+
+**Theme**
+- Nine Horizon files are changed (see [Changes to Horizon files](#changes-to-horizon-files)); an update of Horizon could overwrite them.
+- Horizon renders the heading id `cart-drawer-heading` twice on every page.
 
 ## Use of AI
 
