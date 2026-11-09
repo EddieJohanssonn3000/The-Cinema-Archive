@@ -62,8 +62,11 @@
       "type": "collection-toolbar",
       "name": "Collection toolbar",
       "settings": {
+        "format_label": "Format",
         "all_label": "All formats",
-        "filter_label": "Filter by format",
+        "condition_label": "Condition",
+        "condition_all_label": "All conditions",
+        "filter_label": "Filter films",
         "sort_label": "Sort by"
       }
     },
