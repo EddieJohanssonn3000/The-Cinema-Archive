@@ -312,12 +312,15 @@ AI tools were used as a pair programmer and tutor during the project.
 - Reading Horizon's existing code before changes, so custom code reuses Horizon's patterns instead of rewriting them
 - Reviewing diffs before commits, and finding risks and bugs (for example a whitespace bug in the runtime and an HTML-escaping bug in a heading)
 - Troubleshooting Shopify CLI and Theme Editor sync problems
+- Testing: In general. 
+- Checking the product data (metafields, tags, prices, director links) and comparing the live theme with `dev` before each push
 
 **What I did myself**
-- Coding, The concept, the visual design in Figma and all design decisions
-- Setting up the store in Shopify Admin: metafield and metaobject definitions, products, directors, pages, menus and the Search & Discovery filter
+- Coding, the concept, the visual design in Figma and all design decisions
+- Setting up the store in Shopify Admin: metafield and metaobject definitions, products, directors, collections, pages, menus and the Search & Discovery filters
 - Choosing between the options AI proposed, and deciding what to build and what to leave out
-- Git: committing, branching, merging and reviewing what goes into each commit
+- Testing on my own iPhone and on the school projector, and approving every change before it was merged and published
+- Git: committing, branching, pull requests, merging and pushing to the live theme
 
 **How I worked with AI**
 - One small step at a time: the AI explained the plan and the files involved before changing anything, and asked for my approval before changes.
