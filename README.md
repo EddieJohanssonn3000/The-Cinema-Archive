@@ -200,13 +200,29 @@ Open `http://127.0.0.1:9292`. If the store is password protected, enter the stor
 
 The theme only looks right once the store has the metafields, the Directors metaobject and some content (see below).
 
-### Upload the theme to a store
+### First publish
 
-Push to a new, unpublished theme first, check it, then publish it:
+Push to a new, unpublished theme first, preview it in the store, then publish it from Online Store → Themes:
 
 ```sh
-shopify theme push --unpublished --theme "Cinema Archive"
+shopify theme push --unpublished --store <your-store>.myshopify.com
 ```
+
+The previous live theme stays in the theme library, so publishing can be undone with one click.
+
+### Update the live theme
+
+After a feature is merged into `dev` (see [Git workflow](#git-workflow)):
+
+1. Stop `shopify theme dev`, switch to `dev` and pull.
+2. Check `git status` and compare the live theme's templates with the local ones, so no settings in the store are overwritten by mistake.
+3. Push to the live theme:
+
+```sh
+shopify theme push --theme <live-theme-id> --store <your-store>.myshopify.com --allow-live
+```
+
+`--allow-live` confirms on purpose that the published theme is changed. Never change the live theme with *Edit theme* in Admin: those changes are not in Git and are overwritten by the next push. Make Theme Editor changes through the link that `shopify theme dev` prints instead.
 
 ## Store setup (Shopify Admin)
 
@@ -214,11 +230,17 @@ These parts live in the store, not in this repository:
 
 1. **Product metafield definitions** (Settings → Metafields and metaobjects → Products) with the keys and types listed in [Data model](#data-model).
 2. **Directors metaobject definition** with the fields above, with web pages (online store) enabled.
-3. **Search & Discovery app** → Filters → add a filter for the product metafield *Format*.
-4. **Pages:** a page *Directors* using the template `page.directors`, and a *Contact* page.
-5. **Main menu:** Home, Films (`/collections/all`), Directors and Contact.
-6. **Products:** one product per physical copy, inventory tracked with quantity 1, metafields filled in.
-7. **Sender email** (Settings → Notifications) for messages from the contact form.
+3. **Search & Discovery app** → Filters → add filters for the product metafields *Format* and *Condition*. Their order there is the order of the dropdowns; sort the condition values manually (Mint, Very good, Good, Used).
+4. **Pages:** a page *Directors* using the template `page.directors`, and a *Contact* page. The template can only be chosen in Admin once the theme is published.
+5. **Main menu:** Home, Films (`/collections/all`), Directors (the Directors page) and Contact.
+6. **Products:** one product per physical copy, inventory tracked with quantity 1, metafields filled in, and a tag with the director's full name.
+7. **Collection *The Edit*:** a manual collection with the films for the homepage, chosen in the *Featured films* section.
+8. **Customer accounts:** sign-in links turned off (Settings → Customer accounts), since the store has no accounts.
+9. **Payments:** Shopify's test payment gateway for test orders. Set inventory back to 1 after a test order.
+10. **Sender email** (Settings → Notifications) for messages from the contact form.
+11. **Password protection** (Online Store → Preferences). Share the password with people who should see the store.
+
+Discount codes are switched off in the theme settings (Theme settings → Cart), so that setting lives in `config/settings_data.json`, not in Admin.
 
 ## Working with the Theme Editor
 
