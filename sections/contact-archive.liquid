@@ -245,6 +245,18 @@
     background: #f2d46d;
   }
 
+  /* Press: a small push down, like the add-to-cart button */
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-archive .submit-button {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .contact-archive .submit-button:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
+  }
+
   .contact-archive .contact-form__error,
   .contact-archive .contact-form__success {
     padding: 0.85rem 1rem;

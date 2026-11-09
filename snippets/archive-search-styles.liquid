@@ -242,8 +242,20 @@
     font-weight: 400;
   }
 
-  #search-modal .predictive-search__search-button:hover {
-    box-shadow: 0.5rem 0.5rem 0 var(--archive-ink);
+  /* Hover: the arrow cell turns yellow. Press: a small push down, like the add-to-cart button */
+  #search-modal .predictive-search__search-button:is(:hover, :focus-visible)::after {
+    background: var(--archive-yellow);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    #search-modal .predictive-search__search-button {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    #search-modal .predictive-search__search-button:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
   }
 
   /* Search page: layout/theme.liquid sets data-template on <main> */
