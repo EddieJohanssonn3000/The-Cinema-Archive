@@ -73,7 +73,7 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 - Shopify development store and **Horizon 4.2.0** theme
 - Shopify Liquid, HTML, CSS and a little JavaScript (Horizon's own components)
 - Product metafields and a Directors metaobject
-- Shopify Search & Discovery app (storefront filter for format)
+- Shopify Search & Discovery app (storefront filters for format and condition)
 - Shopify CLI for local development
 - Git and GitHub
 
@@ -85,13 +85,17 @@ Shopify handles products, inventory, cart, checkout and hosting. There is no cus
 
 | Key | Type | Used for |
 |---|---|---|
-| `format` | Single line text | "DVD" or "Blu-ray". Also the storefront filter. |
-| `condition` | Single line text | e.g. "Very good" |
+| `format` | Single line text | "DVD" or "BLU-RAY". Also a storefront filter. |
+| `condition` | Single line text | "Mint", "Very good", "Good" or "Used". Also a storefront filter. |
 | `release_year` | Integer | e.g. 2003 |
 | `runtime` | Integer (minutes) | shown as "1 h 42 min" |
 | `director` | Metaobject reference (Directors) | links a film to its director |
 | `archive_note` | Multi-line text | quote in the product page's archive note box |
 | `archive_note_author` | Single line text | e.g. "Archive employee" |
+
+`format` and `condition` are free text, so the values must be spelled exactly as above. A new spelling (for example "Bluray") would show up as an extra choice in the filter.
+
+**Product tag:** every film also has a tag with the director's full name, for example `Wes Anderson`. Shopify's search reads tags but not metaobject references, so the tag is what makes "wes" find the films.
 
 ### Directors metaobject (type `directors`)
 
@@ -105,6 +109,8 @@ Shopify handles products, inventory, cart, checkout and hosting. There is no cus
 | `country` | Single line text (optional) |
 
 The metaobject has web pages enabled, so each director gets a page at `/pages/directors/<handle>` (template `templates/metaobject/directors.json`).
+
+**Search suggestions:** Shopify's predictive search cannot return metaobjects, so `snippets/predictive-search-directors.liquid` matches the search against the directors in Liquid. A director matches when a word in the name starts with the search; the handle is checked too, so "chloe" finds Chloé Zhao.
 
 **Filmography:** Liquid cannot look up "all products with this director" directly, so the theme scans the first 50 products of `collections.all` and keeps those whose director matches. This is fine for a small, curated catalogue.
 
