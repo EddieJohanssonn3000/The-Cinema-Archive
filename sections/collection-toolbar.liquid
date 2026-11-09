@@ -10,6 +10,9 @@
   The form action ends in #collection-toolbar, so after the reload the page opens at the toolbar
   with the films right below, not at the top of the page.
 
+  When a format or condition is chosen, a "Clear filters" link appears. It is a plain link to the
+  same page without filters, and it keeps the sorting (and on the search page the search terms).
+
   To avoid showing filters twice, turn off filtering and sorting in the product grid's
   filter block in the Theme Editor.
 
@@ -30,23 +33,50 @@
     assign source_filters = search.filters
     assign sort_options = search.sort_options
     assign current_sort = search.sort_by | default: search.default_sort_by
+    assign active_sort = search.sort_by
     assign search_terms = search.terms | replace: '&quot;', '"' | replace: '&#39;', "'" | replace: '&#x27;', "'" | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&'
     assign form_action = routes.search_url
+    assign terms_encoded = search_terms | url_encode
+    assign clear_url = routes.search_url | append: '?q=' | append: terms_encoded | append: '&type=product&options%5Bprefix%5D=last'
   else
     assign source_filters = collection.filters
     assign sort_options = collection.sort_options
     assign current_sort = collection.sort_by | default: collection.default_sort_by
+    assign active_sort = collection.sort_by
     assign form_action = collection.url
+    assign clear_url = collection.url
   endif
 
   assign show_filters = false
+  assign has_active_filter = false
   for filter in source_filters
     if filter.param_name contains 'custom.format' or filter.param_name contains 'custom.condition'
       if filter.values.size > 0
         assign show_filters = true
       endif
+      if filter.active_values.size > 0
+        assign has_active_filter = true
+      endif
     endif
   endfor
+
+  # "Clear filters" keeps the sorting and opens the page at the toolbar.
+  # Only a sorting the store offers is kept, not whatever was typed into the address.
+  assign valid_sort = false
+  for option in sort_options
+    if option.value == active_sort
+      assign valid_sort = true
+    endif
+  endfor
+  if active_sort != blank and valid_sort
+    assign sort_encoded = active_sort | url_encode
+    if clear_url contains '?'
+      assign clear_url = clear_url | append: '&sort_by=' | append: sort_encoded
+    else
+      assign clear_url = clear_url | append: '?sort_by=' | append: sort_encoded
+    endif
+  endif
+  assign clear_url = clear_url | append: '#collection-toolbar'
 
   assign show_sort = false
   if sort_options.size > 1
@@ -122,6 +152,12 @@
               </div>
             {% endif %}
           {% endfor %}
+
+          {% if has_active_filter %}
+            <a class="collection-toolbar__clear" href="{{ clear_url }}">
+              {{- section.settings.clear_label | default: 'Clear filters' | escape -}}
+            </a>
+          {% endif %}
         </div>
       {% endif %}
 
@@ -187,6 +223,31 @@
 
   .collection-toolbar__field--sort {
     margin-inline-start: auto;
+  }
+
+  .collection-toolbar__filters {
+    align-items: center;
+  }
+
+  .collection-toolbar__clear {
+    color: var(--archive-ink);
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+
+  .collection-toolbar__clear:hover {
+    color: var(--archive-blue);
+  }
+
+  .collection-toolbar__clear:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 3px;
   }
 
   .collection-toolbar__label {
@@ -279,6 +340,12 @@
       "id": "condition_all_label",
       "label": "First choice in the condition dropdown",
       "default": "All conditions"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Label for the link that clears the filters",
+      "default": "Clear filters"
     },
     {
       "type": "text",
