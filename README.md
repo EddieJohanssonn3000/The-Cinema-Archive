@@ -10,6 +10,7 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 
 ## Contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech stack](#tech-stack)
 - [Data model](#data-model)
@@ -22,6 +23,22 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 - [Known limitations](#known-limitations)
 - [Use of AI](#use-of-ai)
 - [Credits and license](#credits-and-license)
+
+---
+
+## Screenshots
+
+**Homepage:** the archive introduction and the marquee band.
+
+![The Cinema Archive homepage](docs/screenshots/home.png)
+
+**Films:** the format and condition filters, with DVD and Good chosen.
+
+![Films page with the format and condition filters](docs/screenshots/films.png)
+
+**Search:** searching for "wes" shows the director above his films.
+
+![Search modal showing Wes Anderson above his films](docs/screenshots/search.png)
 
 ---
 
