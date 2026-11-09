@@ -155,6 +155,26 @@
     font-weight: 400;
   }
 
+  /* Hover: the arrow cell turns yellow. Press: a small push down, like the add-to-cart button */
+  .featured-films__button-arrow {
+    transition: background-color var(--animation-speed) ease-out;
+  }
+
+  .featured-films__button:is(:hover, :focus-visible) .featured-films__button-arrow {
+    background: #f2d46d;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .featured-films__button {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .featured-films__button:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
+  }
+
   @media screen and (min-width: 990px) {
     /* Wider gaps make the four cards a little narrower */
     .featured-films__grid {

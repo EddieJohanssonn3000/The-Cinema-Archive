@@ -214,6 +214,15 @@
     outline-offset: 3px;
   }
 
+  /* Hover: the arrow cell turns yellow. Press: a small push down, like the add-to-cart button */
+  :is(#cart-drawer, main[data-template='cart']) .cart__checkout-button::after {
+    transition: background-color var(--animation-speed) ease-out;
+  }
+
+  :is(#cart-drawer, main[data-template='cart']) .cart__checkout-button:is(:hover, :focus-visible)::after {
+    background: var(--archive-yellow);
+  }
+
   /* Empty cart */
   :is(#cart-drawer, main[data-template='cart']) .cart-items__empty-button {
     --button-color: var(--archive-cream);
@@ -227,5 +236,24 @@
     font-family: var(--font-body--family);
     font-weight: 700;
     text-transform: uppercase;
+  }
+
+  /* No arrow cell here, so hover darkens the blue instead */
+  :is(#cart-drawer, main[data-template='cart']) .cart-items__empty-button:is(:hover, :focus-visible) {
+    --button-background-color: #2645c4;
+
+    background: #2645c4;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :is(#cart-drawer, main[data-template='cart']) :is(.cart__checkout-button, .cart-items__empty-button) {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out,
+        background-color var(--animation-speed) ease-out;
+    }
+
+    :is(#cart-drawer, main[data-template='cart']) :is(.cart__checkout-button, .cart-items__empty-button):active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
   }
 {% endstylesheet %}

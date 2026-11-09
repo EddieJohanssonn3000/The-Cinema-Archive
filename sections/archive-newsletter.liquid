@@ -133,6 +133,23 @@
     transform: rotate(-45deg);
   }
 
+  /* Hover: the arrow cell turns yellow. Press: the whole field gets a small push down,
+     like the add-to-cart button */
+  .archive-newsletter .email-signup__input-group .email-signup__button:is(:hover, :focus-visible) {
+    background: #f2d46d;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .archive-newsletter .email-signup__input-group {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .archive-newsletter .email-signup__input-group:has(.email-signup__button:active) {
+      scale: 0.99;
+      translate: 0 1px;
+    }
+  }
+
   .archive-newsletter .email-signup__message {
     margin-block-start: 1rem;
     color: var(--archive-cream);
