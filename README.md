@@ -129,7 +129,7 @@ sections/
   director-focus.liquid         one highlighted director
   archive-newsletter.liquid     newsletter band (Horizon email-signup block)
   collection-hero.liquid        Films page hero
-  collection-toolbar.liquid     format buttons + sorting
+  collection-toolbar.liquid     format and condition dropdowns, sorting, "Clear filters"
   archive-note.liquid           short editorial quote between two rules
   archive-back-link.liquid      "← Back to archive" on the product page
   product-archive-note.liquid   per-film quote box
@@ -139,6 +139,8 @@ sections/
   director-hero.liquid          director page hero
   director-portrait.liquid      director lead text and biography
   contact-archive.liquid        contact page
+  cart-recommendations.liquid   "You may also like" on the cart page
+  archive-footer.liquid         footer
 
 blocks/
   film-title.liquid             product title and description
@@ -152,13 +154,31 @@ snippets/
   film-details.liquid           director/format/year/runtime/condition list
   quote-box.liquid              coloured quote box
   archive-note.liquid           quote between two rules
+  predictive-search-directors.liquid  directors in the search suggestions
+  archive-search-styles.liquid  styles for the search modal and the search page
+  archive-cart-styles.liquid    styles for the slide-in cart and the cart page
 
 templates/
   page.directors.json           directors overview page
   metaobject/directors.json     director page
 ```
 
-Small, documented changes were also made to Horizon files, for example `sections/header.liquid` (header layout and mobile menu), `blocks/_header-logo.liquid` (text logo), `blocks/_header-menu.liquid` (active state for links with a query string) and `locales/en.default.json` (button text "Add this copy to cart").
+### Changes to Horizon files
+
+Most of the work is in new files, but a few of Horizon's own files had to change. The changes are small; where the reason is not obvious from the code, a comment explains it.
+
+| File | Change |
+|---|---|
+| `sections/header.liquid` | Header layout and colours. The desktop layout applies only in Horizon's menu mode, so touch screens get the drawer menu instead of a broken mix. |
+| `blocks/_header-logo.liquid` | Text logo instead of an image |
+| `blocks/_header-menu.liquid` | Active state for menu links with a query string |
+| `snippets/search-modal.liquid` | Visible "Search the archive" label and the archive search styles |
+| `sections/predictive-search.liquid` | Directors above the films in the search suggestions |
+| `snippets/cart-drawer.liquid` | Loads the archive cart styles |
+| `assets/theme-drawer.js` and `snippets/theme-drawer.liquid` | The slide-in cart opens over the page on every screen size, instead of squeezing the page on wide screens |
+| `locales/en.default.json` | Button text "Add this copy to cart" and the search placeholder |
+
+A future update of Horizon could overwrite these files, so they need to be checked again after an update.
 
 ## Getting started
 
