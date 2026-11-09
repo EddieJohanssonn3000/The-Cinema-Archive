@@ -1,0 +1,162 @@
+{%- doc -%}
+  Directors whose name matches the search, shown above the films in the search modal.
+  Predictive search only returns products, collections, pages and articles, so the directors
+  (metaobjects) are matched here in Liquid instead.
+
+  A director matches when a word in the name starts with the search, so "wes" and "quentin"
+  match but "an" inside "Ryan" does not. The handle is checked too, so "chloe" finds Chloé Zhao.
+  The search terms are only compared, never printed.
+
+  Each row has ref="resultsItems[]", so the arrow keys and Enter in assets/predictive-search.js
+  move through the directors in the same way as through the films.
+
+  @param {string} terms - The visitor's search terms (predictive_search.terms)
+  @param {number} [limit] - Maximum number of directors, defaults to 3
+
+  @example
+  {% render 'predictive-search-directors', terms: predictive_search.terms %}
+{%- enddoc -%}
+
+{%- liquid
+  assign term = terms | downcase | strip
+  assign max_directors = limit | default: 3
+  assign shown = 0
+-%}
+
+{%- if term.size > 1 -%}
+  {%- liquid
+    # Word starts in the name begin after a space, word starts in the handle after a hyphen
+    assign word_start = ' ' | append: term
+    assign term_handle = term | replace: ' ', '-'
+    assign handle_start = '-' | append: term_handle
+  -%}
+
+  {%- capture director_items -%}
+    {%- for director in metaobjects.directors.values -%}
+      {%- liquid
+        assign director_name = director.name.value
+        assign name_key = ' ' | append: director_name | downcase
+        assign handle_key = '-' | append: director.system.handle
+        assign is_match = false
+        if director.system.url != blank
+          if name_key contains word_start or handle_key contains handle_start
+            assign is_match = true
+          endif
+        endif
+      -%}
+
+      {%- if is_match -%}
+        {%- assign portrait = director.portrait.value -%}
+        <li class="archive-director-result" ref="resultsItems[]">
+          <a class="archive-director-result__link" href="{{ director.system.url }}">
+            <span class="archive-director-result__portrait">
+              {%- if portrait != blank -%}
+                {{ portrait | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', width: 80 }}
+              {%- endif -%}
+            </span>
+            <span class="archive-director-result__text">
+              <span class="archive-director-result__name">{{ director_name | escape }}</span>
+              <span class="archive-director-result__role">Director</span>
+            </span>
+          </a>
+        </li>
+        {%- liquid
+          assign shown = shown | plus: 1
+          if shown >= max_directors
+            break
+          endif
+        -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if shown > 0 -%}
+    <div class="archive-director-results">
+      <h4 class="predictive-search-results__title">Directors</h4>
+      {%- comment -%}
+        predictive-search-results__list is one of the containers assets/predictive-search.js
+        reads keyboard items from; without it the arrow keys skip the directors.
+      {%- endcomment -%}
+      <ul class="predictive-search-results__list archive-director-results__list list-unstyled">
+        {{ director_items }}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  /* Portrait, name and role. Colours come from the archive tokens set on #search-modal
+     in snippets/archive-search-styles.liquid. */
+  #search-modal .archive-director-results {
+    padding-inline: var(--padding-xl);
+    margin-block-end: var(--margin-lg);
+  }
+
+  #search-modal .archive-director-results__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  #search-modal .archive-director-result__link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.35rem;
+    color: var(--archive-ink);
+    text-decoration: none;
+  }
+
+  #search-modal .archive-director-result__portrait {
+    flex: 0 0 3rem;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: rgb(25 25 25 / 0.08);
+    border: 2px solid var(--archive-ink);
+  }
+
+  #search-modal .archive-director-result__portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #search-modal .archive-director-result__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  #search-modal .archive-director-result__name {
+    font-family: var(--font-heading--family);
+    font-size: 1.35rem;
+    font-weight: var(--font-heading--weight);
+    line-height: 1.05;
+  }
+
+  #search-modal .archive-director-result__role {
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #search-modal .archive-director-result__link:hover .archive-director-result__name {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  /* Keyboard focus, same indicator as the film cards */
+  #search-modal .archive-director-result:is([aria-selected='true'].keyboard-focus, :has(a:focus-visible)) {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 2px;
+  }
+
+  #search-modal .archive-director-result a:focus-visible {
+    outline: none;
+  }
+{% endstylesheet %}

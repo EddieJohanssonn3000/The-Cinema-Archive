@@ -24,6 +24,17 @@
         {% assign search_results_count = search.results_count %}
       {% endif %}
 
+      {%- comment -%} Cinema Archive: directors (metaobjects) matched in Liquid, shown above the films {%- endcomment -%}
+      {%- liquid
+        assign director_results = ''
+        if predictive_search.performed
+          capture director_results
+            render 'predictive-search-directors', terms: predictive_search.terms
+          endcapture
+          assign director_results = director_results | strip
+        endif
+      -%}
+
       <div
         class="visually-hidden"
         role="status"
@@ -62,7 +73,9 @@
           </ul>
         {% endif %}
 
-        {%- if search_results_count > 0 -%}
+        {%- if search_results_count > 0 or director_results != blank -%}
+          {{ director_results }}
+
           {% if predictive_search.resources.products.size > 0 %}
             {%- liquid
               assign title = 'content.search_results_resource_products' | t
@@ -141,7 +154,8 @@
             {% endif %}
           {% endif %}
 
-          {% if single_result_url %}
+          {%- comment -%} Cinema Archive: Enter should not jump to the one film when a director is also listed {%- endcomment -%}
+          {% if single_result_url and director_results == blank %}
             <div data-single-result-url="{{ single_result_url }}"></div>
           {% endif %}
         {% endif %}
