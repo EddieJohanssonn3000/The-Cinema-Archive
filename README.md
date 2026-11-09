@@ -252,23 +252,32 @@ Section settings and the order of sections are stored in JSON files in `template
 
 ## Git workflow
 
-- `main`: stable, tested code
-- `dev`: finished features collected before release
-- `feature/<name>`: one branch per feature, merged into `dev` when done
+- `main`: stable, tested code; updated from `dev` at the code freeze before the presentation
+- `dev`: finished features; this is what runs on the live theme
+- `feature/<name>`, `fix/<name>`, `docs/<name>`: one branch per topic, created from `dev`
+
+Every change reaches `dev` through a pull request on GitHub, never by committing to `dev` directly. Inside a branch, each working step is its own commit with a short message, for example "Keep the sorting when filtering". After a merge, `dev` is pushed to the live theme (see [Update the live theme](#update-the-live-theme)).
+
+Changes made in the Theme Editor are saved into JSON files in the repository, so they are made on a branch too.
 
 ## Testing
 
-Checked for each page:
+Checked for each feature before it was merged:
 
-- Screen widths 390–440, 1024, 1280, 1440 and 1920 px (Chrome DevTools, device type *Desktop* for desktop sizes)
-- Empty and missing data (no director, no runtime, no portrait, no archive note)
-- Cart and checkout, sold-out products, the contact form and the newsletter form
+- **Screen widths** 390–440, 768, 1024, 1280, 1440, 1920 and 2560 px (Chrome DevTools, device type *Desktop* for desktop sizes, since the *Mobile* type turns on touch and changes Horizon's header)
+- **Real devices:** an iPhone, through the theme preview link, and the school projector at 1920 × 1080
+- **Empty and missing data:** no director, no runtime, no portrait, no archive note, an empty cart, a search with no results
+- **Shopping:** cart, checkout with test payments, sold-out products, the contact form and the newsletter form
+- **Filters and search:** every combination of format and condition, sorting, "Clear filters", and search terms with quotes and apostrophes, clicked through in a headless Chrome
+- **Keyboard:** Tab and the arrow keys through the toolbar and the search suggestions, with a visible focus indicator
+- **Security:** search terms, filter values and sort values containing HTML and script tags, checked to make sure nothing is output unescaped
+- **Lighthouse:** Accessibility 100 on the Films page and 95 on the homepage
 - `shopify theme check` (no errors)
 
 ## Known limitations
 
 - Filmographies and "More from…" scan the first 50 products only.
-- On touch devices with wide screens (e.g. iPad) Horizon switches the header to its drawer menu, which is not fully styled yet.
+- On touch devices with wide screens (e.g. iPad) Horizon switches the header to its drawer menu.
 - The Directors menu link uses `?view=directors` until the theme is published and the page can be assigned the `page.directors` template.
 - The footer still uses Horizon's default design.
 - Sold-out copies stay visible in listings.
@@ -279,7 +288,7 @@ AI tools were used as a pair programmer and tutor during the project.
 
 **Tools**
 - **Claude Code** (Anthropic), in VS Code, for most of the development work
-- **GitHub Copilot**, for some smaller fixes, for example the header dividers
+- **GitHub Copilot**
 
 **What AI was used for**
 - Recommending, writing and refactoring Liquid, CSS and section schemas based on my descriptions and the Figma design
@@ -289,7 +298,7 @@ AI tools were used as a pair programmer and tutor during the project.
 - Troubleshooting Shopify CLI and Theme Editor sync problems
 
 **What I did myself**
-- The concept, the visual design in Figma and all design decisions
+- Coding, The concept, the visual design in Figma and all design decisions
 - Setting up the store in Shopify Admin: metafield and metaobject definitions, products, directors, pages, menus and the Search & Discovery filter
 - Choosing between the options AI proposed, and deciding what to build and what to leave out
 - Git: committing, branching, merging and reviewing what goes into each commit
