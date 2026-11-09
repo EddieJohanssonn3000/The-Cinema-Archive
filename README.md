@@ -4,7 +4,7 @@ A second-hand film store built on Shopify. The Cinema Archive sells physical fil
 
 The project is a customised version of Shopify's **Horizon** theme, built as a five-week final project before an internship (LIA). It demonstrates Shopify theme development with Liquid, reusable sections and theme blocks, product metafields and a metaobject for directors.
 
-> **Status:** school project. The store is a password-protected Shopify development store; there are no real customers or orders.
+> **Status:** school project, published on a password-protected Shopify development store. Checkout uses Shopify's test payment gateway; there are no real customers or orders.
 
 ---
 
@@ -29,20 +29,30 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 
 **Homepage**
 - Archive introduction (hero), a dark marquee band and a quote section with a photo.
-- *Featured films*: film cards from a chosen collection with a staggered layout and a "View all N films" button.
+- *Featured films*: four films from a hand-picked collection, *The Edit*, with a staggered layout and a "View all N films" button.
 - *Director focus*: highlights one director from the Directors metaobject.
 - Newsletter sign-up using Shopify's native customer form.
 
 **Films (collection page)**
 - Collection hero with an automatic product count.
-- Format filter as buttons (All formats, DVD, Blu-ray) built from Shopify's storefront filters, plus sorting.
-- Film cards showing director, release year, format and condition from metafields.
+- Toolbar with *Format* and *Condition* dropdowns and sorting in one form. The filters combine (for example Blu-ray + Very good), choices with no films are disabled, and a "Clear filters" link resets both while keeping the sorting. After each choice the page reloads at the toolbar, not at the top.
+- Film cards in fixed columns (2 on mobile, 3 on tablets, 5 on desktop, 6 on wide screens), showing director, release year, format and condition from metafields.
+
+**Search**
+- Search modal in the archive style. Typing a director's name ("wes", "tarantino", "chloe") shows the director above the matching films; the arrow keys and Enter work for directors as well as films.
+- Search results page with the same toolbar and film cards as the Films page.
 
 **Product page**
 - Large title, description, price and an "Only one copy" badge when exactly one copy is in stock.
 - Film details: director (linked to the director page), format, release year, runtime and condition.
 - An "archive note" quote box per film, and "More from [director] in the archive".
-- Shopify's native cart and checkout, restyled buy button and sticky add-to-cart bar.
+- Restyled buy button and sticky add-to-cart bar.
+
+**Cart**
+- Slide-in cart that opens over the page with a dark backdrop on every screen size, and a cart page, both in the archive style.
+- No quantity selector, since every film is a single copy; the remove button stays.
+- "You may also like" on the cart page leaves out films that are already in the cart and sold-out films.
+- Shopify's native checkout.
 
 **Directors**
 - Directors overview with portrait cards and the number of films per director.
@@ -51,7 +61,12 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 **Contact page**
 - Styled Shopify contact form and a "sell or donate your films" section.
 
-**Responsive** layouts for mobile, tablet and desktop, tested at 390–440, 1024, 1280, 1440 and 1920 px.
+**Details**
+- Call-to-action buttons share one behaviour: the arrow cell turns yellow on hover and keyboard focus, and the button presses down slightly when clicked (switched off for visitors who prefer reduced motion).
+- Header with a text logo and a grid menu on desktop; touch screens get Shopify's drawer menu in the archive colours.
+- Favicon in the archive style, and arrows that stay text instead of turning into emoji on iPhone.
+
+**Responsive** layouts for mobile, tablet and desktop, tested at 390–440, 1024, 1280, 1440, 1920 and 2560 px, on a real iPhone and on the school projector (1920 × 1080).
 
 ## Tech stack
 
