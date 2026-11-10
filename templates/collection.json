@@ -104,8 +104,8 @@
       "type": "collection-hero",
       "name": "Collection hero",
       "settings": {
-        "label": "The complete index / 001-[count]",
-        "heading": "<p>The film</p><p><em>archive</em></p>",
+        "label": "Archive index / 001-[count]",
+        "heading": "<p>The film&nbsp;</p><p><em>archive</em></p>",
         "description": "<p>A growing collection of second-hand films, each inspected, indexed and ready to be watched again.</p>"
       }
     },
@@ -125,6 +125,7 @@
         "all_label": "All formats",
         "condition_label": "Condition",
         "condition_all_label": "All conditions",
+        "clear_label": "Clear filters",
         "filter_label": "Filter films",
         "sort_label": "Sort by"
       }
