@@ -78,6 +78,9 @@
   endif
   assign clear_url = clear_url | append: '#collection-toolbar'
 
+  # Sortings left out of the dropdown (see the comment at the dropdown)
+  assign hidden_sorts = 'manual,most-relevant,best-selling,created-ascending' | split: ','
+
   assign show_sort = false
   if sort_options.size > 1
     assign show_sort = true
@@ -172,9 +175,27 @@
             name="sort_by"
             onchange="this.form.submit()"
           >
+            {% comment %}
+              Shopify's "Date" sorting is by when the product was added to the store, not by
+              release year. So "new to old" is renamed to say that, and "old to new" is left out.
+              Featured, Most relevant and Best selling say little in a store of single copies,
+              so they are left out too.
+              A hidden option is still shown when it is the sorting in use (an old link, or a
+              collection whose default sorting is one of them), so the list never shows the
+              wrong choice as selected.
+            {% endcomment %}
             {% for option in sort_options %}
+              {% liquid
+                if hidden_sorts contains option.value and option.value != current_sort
+                  continue
+                endif
+                assign option_name = option.name
+                if option.value == 'created-descending'
+                  assign option_name = section.settings.newest_label | default: option.name
+                endif
+              %}
               <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>
-                {{- option.name | escape -}}
+                {{- option_name | escape -}}
               </option>
             {% endfor %}
           </select>
@@ -359,6 +380,13 @@
       "id": "sort_label",
       "label": "Sorting label",
       "default": "Sort by"
+    },
+    {
+      "type": "text",
+      "id": "newest_label",
+      "label": "Name for the newest-first sorting",
+      "info": "Shopify sorts by when a film was added to the store, not by release year.",
+      "default": "Newest arrivals"
     }
   ],
   "presets": [

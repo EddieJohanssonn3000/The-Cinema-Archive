@@ -18,7 +18,7 @@
         "link_text": "Explore the collection",
         "link_url": "shopify://collections/all",
         "panel_label": "Archive entry № 001",
-        "panel_callout": "Play it again ↗︎"
+        "panel_callout": ""
       }
     },
     "archive_marquee_YbEHbw": {
@@ -107,7 +107,7 @@
       ],
       "name": "Archive newsletter",
       "settings": {
-        "label": "New arrivals, old favourites and one very good recommendation.",
+        "label": "New arrivals, old favourites and very good recommendations.",
         "heading": "<p>The Friday Matinée</p>"
       }
     }
