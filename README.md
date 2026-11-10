@@ -304,12 +304,13 @@ Checked for each feature before it was merged:
 - Shopify's search index updates a few minutes after a product is saved, so new films and changed values can take a moment to appear in search and filters.
 - When "All" is chosen in a filter dropdown, the address still contains the empty filter (for example `filter.p.m.custom.format=`). Shopify ignores it.
 - In Chrome, a dropdown shows its focus outline after a mouse click too, not only with the keyboard.
+- Films cannot be sorted by release year. Shopify's built-in sorting cannot use metafields, so it would need an app or an external API. "Newest arrivals" sorts by when a film was added to the store, and "Featured", "Most relevant", "Best selling" and oldest-first are hidden from the dropdown.
+- A sold-out film (inventory 0) can no longer be bought, but it still appears on Films, in search and on its director's page. Hiding it would mean an automated collection with the condition "Inventory stock is greater than 0" for Films; search and the director pages would still need their own solution.
 
 **Layout**
 - On touch devices with wide screens (e.g. iPad) Horizon switches the header to its drawer menu.
 - The Directors overview and the search page keep Horizon's page width, so very wide screens show empty space at the sides.
 - Removing a film on the cart page does not refresh "You may also like" until the page is reloaded.
-- Sold-out copies stay visible in listings.
 
 **Theme**
 - Nine Horizon files are changed (see [Changes to Horizon files](#changes-to-horizon-files)); an update of Horizon could overwrite them.
