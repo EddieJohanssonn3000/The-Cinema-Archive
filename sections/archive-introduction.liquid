@@ -31,7 +31,7 @@
         href="{{ section.settings.link_url }}"
       >
         <span>{{ section.settings.link_text }}</span>
-        <span class="archive-introduction__link-arrow" aria-hidden="true">↗</span>
+        <span class="archive-introduction__link-arrow" aria-hidden="true">&#x2197;&#xFE0E;</span>
       </a>
     {% endif %}
   </div>
@@ -177,6 +177,26 @@
     border-inline-start: 2px solid var(--archive-ink);
     font-size: 1.75rem;
     font-weight: 400;
+  }
+
+  /* Hover: the arrow cell turns yellow. Press: a small push down, like the add-to-cart button */
+  .archive-introduction__link-arrow {
+    transition: background-color var(--animation-speed) ease-out;
+  }
+
+  .archive-introduction__link:is(:hover, :focus-visible) .archive-introduction__link-arrow {
+    background: var(--archive-yellow);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .archive-introduction__link {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .archive-introduction__link:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
   }
 
   @media (max-width: 749px) {

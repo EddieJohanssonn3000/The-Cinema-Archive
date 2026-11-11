@@ -1,0 +1,331 @@
+{% comment %}
+  Archive footer: a dark footer with four columns (brand, two menus, contact) and a bottom bar
+  with copyright and links to the store policies.
+  Menus come from Admin (Content → Menus). Policy links are created by Shopify from
+  Settings → Policies; only policies that are filled in are shown.
+  Empty columns are not rendered.
+{% endcomment %}
+
+{% liquid
+  assign menu_one = section.settings.menu_one
+  assign menu_two = section.settings.menu_two
+  assign email = section.settings.email | strip
+%}
+
+{% comment %} The layout already wraps the footer group in <footer>, so this is a div {% endcomment %}
+<div class="archive-footer">
+  <div class="archive-footer__columns">
+    <div class="archive-footer__column archive-footer__column--brand">
+      <a class="archive-footer__logo" href="{{ routes.root_url }}">
+        <span class="archive-footer__wordmark">
+          <span>The cinema</span>
+          <strong>Archive</strong>
+        </span>
+        <span class="visually-hidden">{{ shop.name | escape }}</span>
+      </a>
+
+      {% if section.settings.brand_text != blank %}
+        <p class="archive-footer__text">{{ section.settings.brand_text | escape }}</p>
+      {% endif %}
+    </div>
+
+    {% if menu_one != blank and menu_one.links.size > 0 %}
+      <nav class="archive-footer__column" aria-label="{{ section.settings.menu_one_heading | default: menu_one.title | escape }}">
+        {% if section.settings.menu_one_heading != blank %}
+          <h2 class="archive-footer__heading">{{ section.settings.menu_one_heading | escape }}</h2>
+        {% endif %}
+        <ul class="archive-footer__links" role="list">
+          {% for link in menu_one.links %}
+            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+
+    {% if menu_two != blank and menu_two.links.size > 0 %}
+      <nav class="archive-footer__column" aria-label="{{ section.settings.menu_two_heading | default: menu_two.title | escape }}">
+        {% if section.settings.menu_two_heading != blank %}
+          <h2 class="archive-footer__heading">{{ section.settings.menu_two_heading | escape }}</h2>
+        {% endif %}
+        <ul class="archive-footer__links" role="list">
+          {% for link in menu_two.links %}
+            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+
+    {% if section.settings.contact_heading != blank or email != blank or section.settings.contact_text != blank %}
+      <div class="archive-footer__column">
+        {% if section.settings.contact_heading != blank %}
+          <h2 class="archive-footer__heading">{{ section.settings.contact_heading | escape }}</h2>
+        {% endif %}
+        {% if email != blank %}
+          <a class="archive-footer__email" href="mailto:{{ email | escape }}">{{ email | escape }}</a>
+        {% endif %}
+        {% if section.settings.contact_text != blank %}
+          <div class="archive-footer__text">{{ section.settings.contact_text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="archive-footer__bottom">
+    <p class="archive-footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}
+      {%- if section.settings.copyright_text != blank %} · {{ section.settings.copyright_text | escape }}{% endif %}
+    </p>
+
+    {% if section.settings.show_policies and shop.policies.size > 0 %}
+      <ul class="archive-footer__policies" role="list">
+        {% for policy in shop.policies %}
+          <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .archive-footer {
+    --archive-ink: #191919;
+    --archive-cream: #f5eedc;
+    --archive-yellow: #f2d46d;
+
+    color: var(--archive-cream);
+    background: var(--archive-ink);
+  }
+
+  .archive-footer p {
+    margin: 0;
+  }
+
+  .archive-footer a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .archive-footer a:hover,
+  .archive-footer a:focus-visible {
+    color: var(--archive-yellow);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Columns separated by cream rules, like the cells in the header */
+  .archive-footer__columns {
+    display: grid;
+  }
+
+  .archive-footer__column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.75rem);
+    border-block-end: 1px solid rgb(245 238 220 / 0.35);
+  }
+
+  .archive-footer__logo {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    width: fit-content;
+  }
+
+  .archive-footer__logo:hover,
+  .archive-footer__logo:focus-visible {
+    text-decoration: none;
+  }
+
+  .archive-footer__wordmark {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .archive-footer__wordmark strong {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: var(--font-heading--weight);
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-transform: none;
+  }
+
+  .archive-footer__text {
+    max-width: 30ch;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+
+  .archive-footer__text p + p {
+    margin-block-start: 0.5em;
+  }
+
+  .archive-footer__heading {
+    margin: 0;
+    color: var(--archive-yellow);
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-body--family);
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .archive-footer__email {
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+    overflow-wrap: anywhere;
+  }
+
+  .archive-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding: 1.5rem clamp(1.5rem, 4vw, 3.75rem);
+    font-family: var(--font-accent--family);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .archive-footer__policies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .archive-footer__columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .archive-footer__column:nth-child(odd) {
+      border-inline-end: 1px solid rgb(245 238 220 / 0.35);
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .archive-footer__columns {
+      grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+    }
+
+    .archive-footer__column {
+      border-inline-end: 1px solid rgb(245 238 220 / 0.35);
+    }
+
+    .archive-footer__column:last-child {
+      border-inline-end: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Archive footer",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "brand_text",
+      "label": "Text under the logo",
+      "default": "Second-hand films on DVD and Blu-ray, each inspected, indexed and ready to be watched again."
+    },
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "text",
+      "id": "menu_one_heading",
+      "label": "First menu heading",
+      "default": "The archive"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_one",
+      "label": "First menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_two_heading",
+      "label": "Second menu heading",
+      "default": "Help"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_two",
+      "label": "Second menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "info": "Shown as a link. Leave empty to hide it."
+    },
+    {
+      "type": "richtext",
+      "id": "contact_text",
+      "label": "Text",
+      "default": "<p>Ships in 1–2 days · 14-day returns</p>"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Text after the copyright",
+      "default": "Second-hand cinema"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policy links",
+      "info": "Links to the policies filled in under Settings → Policies.",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Archive footer"
+    }
+  ]
+}
+{% endschema %}

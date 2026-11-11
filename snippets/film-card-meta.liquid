@@ -71,6 +71,28 @@
     }
   }
 
+  /* Fixed columns on Films and the search page, close to the card size on director pages.
+     Films gets six columns from 1600px because it runs full width; search stays narrower. */
+  @media screen and (min-width: 750px) {
+    main:is([data-template='collection'], [data-template='search']) .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem 1.5rem;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    main:is([data-template='collection'], [data-template='search']) .product-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 3rem 1.75rem;
+    }
+  }
+
+  @media screen and (min-width: 1600px) {
+    main[data-template='collection'] .product-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
   .film-card-info {
     --archive-ink: #191919;
 
@@ -78,17 +100,21 @@
     color: var(--archive-ink);
   }
 
+  /* The price drops to its own row only when the longest word in the title leaves no room */
   .film-card-info__header {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.25rem 1rem;
   }
 
   .film-card-info__title {
+    flex: 1 1 0;
+    min-width: min-content;
     margin: 0;
     font-family: var(--font-heading--family);
-    font-size: clamp(1.3rem, 2vw, 2rem);
+    font-size: clamp(1.2rem, 1.7vw, 1.7rem);
     font-weight: var(--font-heading--weight);
     line-height: 1.05;
   }
@@ -108,7 +134,7 @@
 
   .film-card-info__meta {
     margin: 0.4rem 0 0;
-    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    font-size: clamp(0.95rem, 1.15vw, 1.1rem);
   }
 
   .film-card-info__tags {

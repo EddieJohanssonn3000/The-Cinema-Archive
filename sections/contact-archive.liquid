@@ -235,7 +235,7 @@
     color: var(--archive-ink);
     background: var(--archive-cream);
     border-inline-start: 2px solid var(--archive-ink);
-    content: '↗';
+    content: '\2197\FE0E';
     font-size: 1.5rem;
     font-weight: 400;
   }
@@ -243,6 +243,18 @@
   .contact-archive .submit-button:hover::after,
   .contact-archive .submit-button:focus-visible::after {
     background: #f2d46d;
+  }
+
+  /* Press: a small push down, like the add-to-cart button */
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-archive .submit-button {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .contact-archive .submit-button:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
   }
 
   .contact-archive .contact-form__error,

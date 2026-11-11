@@ -1,108 +1,211 @@
 {% comment %}
-  Collection toolbar: format filter as buttons on the left, sorting on the right.
+  Collection toolbar: dropdowns for format and condition on the left, sorting on the right.
 
-  The buttons are built from Shopify's storefront filter for the metafield custom.format
-  (added in the Search & Discovery app). Each button is a plain link, so no JavaScript is needed
-  and the page reloads with the chosen filter. "All formats" links to the collection without filters.
-  Only one format can be active at a time. Sorting is a form that reloads the page with ?sort_by=.
+  The dropdowns are built from Shopify's storefront filters for the metafields custom.format and
+  custom.condition (added in the Search & Discovery app), in the order they have there.
+  All dropdowns sit in one GET form, so changing one reloads the page with every choice kept:
+  Blu-ray + Very good shows films that match both. "All" is an empty value, which Shopify ignores.
+  Values with no films for the current choice are disabled instead of hidden.
+
+  The form action ends in #collection-toolbar, so after the reload the page opens at the toolbar
+  with the films right below, not at the top of the page.
+
+  When a format or condition is chosen, a "Clear filters" link appears. It is a plain link to the
+  same page without filters, and it keeps the sorting (and on the search page the search terms).
 
   To avoid showing filters twice, turn off filtering and sorting in the product grid's
   filter block in the Theme Editor.
+
+  The same section also works on the search page. There it reads the search object
+  instead of the collection, and the form keeps the search terms (?q=) and type=product.
+  The search terms come from the visitor and are escaped in the form field. Shopify hands them
+  over HTML-escaped (a quote becomes &quot;), so they are turned back into plain text first;
+  otherwise the next search would be for "&quot;".
 {% endcomment %}
 
 {% liquid
-  # Find the format filter among the collection's filters
-  assign format_filter = null
-  for filter in collection.filters
-    if filter.param_name contains 'custom.format'
-      assign format_filter = filter
+  assign is_search = false
+  if request.page_type == 'search'
+    assign is_search = true
+  endif
+
+  if is_search
+    assign source_filters = search.filters
+    assign sort_options = search.sort_options
+    assign current_sort = search.sort_by | default: search.default_sort_by
+    assign active_sort = search.sort_by
+    assign search_terms = search.terms | replace: '&quot;', '"' | replace: '&#39;', "'" | replace: '&#x27;', "'" | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&'
+    assign form_action = routes.search_url
+    assign terms_encoded = search_terms | url_encode
+    assign clear_url = routes.search_url | append: '?q=' | append: terms_encoded | append: '&type=product&options%5Bprefix%5D=last'
+  else
+    assign source_filters = collection.filters
+    assign sort_options = collection.sort_options
+    assign current_sort = collection.sort_by | default: collection.default_sort_by
+    assign active_sort = collection.sort_by
+    assign form_action = collection.url
+    assign clear_url = collection.url
+  endif
+
+  assign show_filters = false
+  assign has_active_filter = false
+  for filter in source_filters
+    if filter.param_name contains 'custom.format' or filter.param_name contains 'custom.condition'
+      if filter.values.size > 0
+        assign show_filters = true
+      endif
+      if filter.active_values.size > 0
+        assign has_active_filter = true
+      endif
     endif
   endfor
 
-  assign sort_options = collection.sort_options
-  assign current_sort = collection.sort_by | default: collection.default_sort_by
-  assign show_pills = false
-  if format_filter != null and format_filter.values.size > 0
-    assign show_pills = true
+  # "Clear filters" keeps the sorting and opens the page at the toolbar.
+  # Only a sorting the store offers is kept, not whatever was typed into the address.
+  assign valid_sort = false
+  for option in sort_options
+    if option.value == active_sort
+      assign valid_sort = true
+    endif
+  endfor
+  if active_sort != blank and valid_sort
+    assign sort_encoded = active_sort | url_encode
+    if clear_url contains '?'
+      assign clear_url = clear_url | append: '&sort_by=' | append: sort_encoded
+    else
+      assign clear_url = clear_url | append: '?sort_by=' | append: sort_encoded
+    endif
   endif
+  assign clear_url = clear_url | append: '#collection-toolbar'
+
+  # Sortings left out of the dropdown (see the comment at the dropdown)
+  assign hidden_sorts = 'manual,most-relevant,best-selling,created-ascending' | split: ','
+
   assign show_sort = false
   if sort_options.size > 1
     assign show_sort = true
   endif
+
+  # Nothing to sort when a search has no results, and no toolbar before anything is searched
+  if is_search
+    if search.results_count == 0
+      assign show_sort = false
+    endif
+    if search.terms == blank
+      assign show_filters = false
+      assign show_sort = false
+    endif
+  endif
 %}
 
-{% if show_pills or show_sort %}
-  <section class="collection-toolbar">
-    {% if show_pills %}
-      <nav class="collection-toolbar__filters" aria-label="{{ section.settings.filter_label | escape }}">
-        {% liquid
-          # Keep the chosen sorting when a format button is clicked
-          assign sort_param = ''
-          assign all_url = collection.url
-          if collection.sort_by != blank
-            assign sort_encoded = collection.sort_by | url_encode
-            assign sort_param = '&sort_by=' | append: sort_encoded
-            assign all_url = collection.url | append: '?sort_by=' | append: sort_encoded
-          endif
-        %}
+{% if show_filters or show_sort %}
+  <section class="collection-toolbar" id="collection-toolbar">
+    <form class="collection-toolbar__form" method="get" action="{{ form_action }}#collection-toolbar">
+      {% if is_search %}
+        <input type="hidden" name="q" value="{{ search_terms | escape }}">
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="options[prefix]" value="last">
+      {% endif %}
 
-        <a
-          class="collection-toolbar__pill{% if format_filter.active_values.size == 0 %} collection-toolbar__pill--active{% endif %}"
-          href="{{ all_url }}"
-          {% if format_filter.active_values.size == 0 %}
-            aria-current="true"
-          {% endif %}
-        >
-          {{- section.settings.all_label | escape -}}
-        </a>
+      {% if show_filters %}
+        <div class="collection-toolbar__filters" role="group" aria-label="{{ section.settings.filter_label | escape }}">
+          {% for filter in source_filters %}
+            {% liquid
+              assign show_field = false
+              if filter.values.size > 0
+                if filter.param_name contains 'custom.format'
+                  assign show_field = true
+                  assign field_label = section.settings.format_label | default: 'Format'
+                  assign all_label = section.settings.all_label | default: 'All formats'
+                elsif filter.param_name contains 'custom.condition'
+                  assign show_field = true
+                  assign field_label = section.settings.condition_label | default: 'Condition'
+                  assign all_label = section.settings.condition_all_label | default: 'All conditions'
+                endif
+              endif
+              assign field_id = 'collection-filter-' | append: section.id | append: '-' | append: forloop.index
+            %}
 
-        {% for value in format_filter.values %}
-          {% liquid
-            assign value_encoded = value.value | url_encode
-            assign value_url = collection.url | append: '?' | append: value.param_name | append: '=' | append: value_encoded | append: sort_param
-          %}
-          <a
-            class="collection-toolbar__pill{% if value.active %} collection-toolbar__pill--active{% endif %}"
-            href="{{ value_url }}"
-            {% if value.active %}
-              aria-current="true"
+            {% if show_field %}
+              <div class="collection-toolbar__field">
+                <label class="collection-toolbar__label" for="{{ field_id }}">
+                  {{- field_label | escape -}}
+                </label>
+                <select
+                  id="{{ field_id }}"
+                  class="collection-toolbar__select"
+                  name="{{ filter.param_name | escape }}"
+                  onchange="this.form.submit()"
+                >
+                  <option value="">{{ all_label | escape }}</option>
+                  {% for value in filter.values %}
+                    <option
+                      value="{{ value.value | escape }}"
+                      {% if value.active %}
+                        selected
+                      {% endif %}
+                      {% if value.count == 0 and value.active == false %}
+                        disabled
+                      {% endif %}
+                    >
+                      {{- value.label | escape -}}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
             {% endif %}
+          {% endfor %}
+
+          {% if has_active_filter %}
+            <a class="collection-toolbar__clear" href="{{ clear_url }}">
+              {{- section.settings.clear_label | default: 'Clear filters' | escape -}}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if show_sort %}
+        <div class="collection-toolbar__field collection-toolbar__field--sort">
+          <label class="collection-toolbar__label" for="collection-sort-{{ section.id }}">
+            {{- section.settings.sort_label | escape -}}
+          </label>
+          <select
+            id="collection-sort-{{ section.id }}"
+            class="collection-toolbar__select"
+            name="sort_by"
+            onchange="this.form.submit()"
           >
-            {{- value.label | escape -}}
-          </a>
-        {% endfor %}
-      </nav>
-    {% endif %}
+            {% comment %}
+              Shopify's "Date" sorting is by when the product was added to the store, not by
+              release year. So "new to old" is renamed to say that, and "old to new" is left out.
+              Featured, Most relevant and Best selling say little in a store of single copies,
+              so they are left out too.
+              A hidden option is still shown when it is the sorting in use (an old link, or a
+              collection whose default sorting is one of them), so the list never shows the
+              wrong choice as selected.
+            {% endcomment %}
+            {% for option in sort_options %}
+              {% liquid
+                if hidden_sorts contains option.value and option.value != current_sort
+                  continue
+                endif
+                assign option_name = option.name
+                if option.value == 'created-descending'
+                  assign option_name = section.settings.newest_label | default: option.name
+                endif
+              %}
+              <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>
+                {{- option_name | escape -}}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
 
-    {% if show_sort %}
-      <form class="collection-toolbar__sort" method="get" action="{{ collection.url }}">
-        {% comment %} Keep the active format filter when the sorting changes {% endcomment %}
-        {% if format_filter != null %}
-          {% for active_value in format_filter.active_values %}
-            <input type="hidden" name="{{ active_value.param_name }}" value="{{ active_value.value | escape }}">
-          {% endfor %}
-        {% endif %}
-
-        <label class="collection-toolbar__sort-label" for="collection-sort-{{ section.id }}">
-          {{- section.settings.sort_label | escape -}}
-        </label>
-        <select
-          id="collection-sort-{{ section.id }}"
-          class="collection-toolbar__select"
-          name="sort_by"
-          onchange="this.form.submit()"
-        >
-          {% for option in sort_options %}
-            <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>
-              {{- option.name | escape -}}
-            </option>
-          {% endfor %}
-        </select>
-        <noscript>
-          <button type="submit" class="collection-toolbar__pill">OK</button>
-        </noscript>
-      </form>
-    {% endif %}
+      <noscript>
+        <button type="submit" class="collection-toolbar__button">OK</button>
+      </noscript>
+    </form>
   </section>
 {% endif %}
 
@@ -110,55 +213,65 @@
   .collection-toolbar {
     --archive-ink: #191919;
     --archive-cream: #f5eedc;
+    --archive-blue: #3155e8;
 
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
+    /* Room for the header when the page opens at #collection-toolbar */
+    scroll-margin-block-start: calc(var(--header-height, 0px) + 1rem);
     padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 4vw, 3.75rem);
     color: var(--archive-ink);
     background: var(--archive-cream);
   }
 
+  .collection-toolbar__form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2.5rem;
+  }
+
   .collection-toolbar__filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 1.25rem 2.5rem;
   }
 
-  .collection-toolbar__pill {
-    display: inline-block;
-    padding: 0.8rem 1.25rem;
-    color: var(--archive-ink);
-    background: transparent;
-    border: 2px solid var(--archive-ink);
-    font-family: var(--font-body--family);
-    font-size: clamp(1rem, 1.4vw, 1.3rem);
-    font-weight: 700;
-    line-height: 1;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .collection-toolbar__pill--active {
-    color: var(--archive-cream);
-    background: var(--archive-ink);
-  }
-
-  .collection-toolbar__pill:not(.collection-toolbar__pill--active):hover,
-  .collection-toolbar__pill:not(.collection-toolbar__pill--active):focus-visible {
-    background: #f2d46d;
-  }
-
-  .collection-toolbar__sort {
+  .collection-toolbar__field {
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+
+  .collection-toolbar__field--sort {
     margin-inline-start: auto;
   }
 
-  .collection-toolbar__sort-label {
+  .collection-toolbar__filters {
+    align-items: center;
+  }
+
+  .collection-toolbar__clear {
+    color: var(--archive-ink);
+    font-family: var(--font-accent--family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+
+  .collection-toolbar__clear:hover {
+    color: var(--archive-blue);
+  }
+
+  .collection-toolbar__clear:focus-visible {
+    outline: 2px solid var(--archive-blue);
+    outline-offset: 3px;
+  }
+
+  .collection-toolbar__label {
     font-family: var(--font-accent--family);
     font-size: 0.8rem;
     font-weight: 700;
@@ -167,7 +280,7 @@
   }
 
   .collection-toolbar__select {
-    min-width: 12rem;
+    min-width: 11rem;
     padding: 0.6rem 2.25rem 0.6rem 0.25rem;
     color: var(--archive-ink);
     background-color: transparent;
@@ -185,18 +298,38 @@
   }
 
   .collection-toolbar__select:focus-visible {
-    outline: 2px solid var(--archive-ink);
+    outline: 2px solid var(--archive-blue);
     outline-offset: 2px;
   }
 
+  .collection-toolbar__button {
+    padding: 0.6rem 1rem;
+    color: var(--archive-ink);
+    background: transparent;
+    border: 2px solid var(--archive-ink);
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  /* Mobile: one dropdown per row, labels in a column so the lists line up */
   @media screen and (max-width: 749px) {
-    .collection-toolbar__sort {
+    .collection-toolbar__filters,
+    .collection-toolbar__field {
       width: 100%;
+    }
+
+    .collection-toolbar__field--sort {
       margin-inline-start: 0;
+    }
+
+    .collection-toolbar__label {
+      flex: 0 0 6.5rem;
     }
 
     .collection-toolbar__select {
       flex: 1 1 auto;
+      min-width: 0;
     }
   }
 {% endstylesheet %}
@@ -207,21 +340,53 @@
   "settings": [
     {
       "type": "text",
+      "id": "format_label",
+      "label": "Label for the format dropdown",
+      "default": "Format"
+    },
+    {
+      "type": "text",
       "id": "all_label",
-      "label": "Label for the \"all\" button",
+      "label": "First choice in the format dropdown",
       "default": "All formats"
     },
     {
       "type": "text",
+      "id": "condition_label",
+      "label": "Label for the condition dropdown",
+      "default": "Condition"
+    },
+    {
+      "type": "text",
+      "id": "condition_all_label",
+      "label": "First choice in the condition dropdown",
+      "default": "All conditions"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Label for the link that clears the filters",
+      "default": "Clear filters"
+    },
+    {
+      "type": "text",
       "id": "filter_label",
-      "label": "Accessible name for the filter buttons",
-      "default": "Filter by format"
+      "label": "Accessible name for the filters",
+      "info": "Read by screen readers, for example \"Filter films\".",
+      "default": "Filter films"
     },
     {
       "type": "text",
       "id": "sort_label",
       "label": "Sorting label",
       "default": "Sort by"
+    },
+    {
+      "type": "text",
+      "id": "newest_label",
+      "label": "Name for the newest-first sorting",
+      "info": "Shopify sorts by when a film was added to the store, not by release year.",
+      "default": "Newest arrivals"
     }
   ],
   "presets": [

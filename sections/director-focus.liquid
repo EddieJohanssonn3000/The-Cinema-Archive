@@ -50,7 +50,7 @@
       {% if section.settings.button_label != blank and director.system.url != blank %}
         <a class="director-focus__button" href="{{ director.system.url }}">
           <span>{{ section.settings.button_label | escape }}</span>
-          <span class="director-focus__button-arrow" aria-hidden="true">↗</span>
+          <span class="director-focus__button-arrow" aria-hidden="true">&#x2197;&#xFE0E;</span>
         </a>
       {% endif %}
     </div>
@@ -170,6 +170,27 @@
     border-inline-start: 2px solid var(--archive-cream);
     font-size: 1.75rem;
     font-weight: 400;
+  }
+
+  /* Hover: the arrow cell turns yellow. Press: a small push down, like the add-to-cart button */
+  .director-focus__button-arrow {
+    transition: background-color var(--animation-speed) ease-out, color var(--animation-speed) ease-out;
+  }
+
+  .director-focus__button:is(:hover, :focus-visible) .director-focus__button-arrow {
+    color: var(--archive-ink);
+    background: #f2d46d;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .director-focus__button {
+      transition: scale var(--animation-speed) ease-out, translate var(--animation-speed) ease-out;
+    }
+
+    .director-focus__button:active {
+      scale: 0.99;
+      translate: 0 1px;
+    }
   }
 
   .director-focus__photo {
