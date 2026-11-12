@@ -186,7 +186,7 @@ Most of the work is in new files, but a few of Horizon's own files had to change
 
 | File | Change |
 |---|---|
-| `sections/header.liquid` | Header layout and colours. The desktop layout applies only in Horizon's menu mode, so touch screens get the drawer menu instead of a broken mix. |
+| `sections/header.liquid` | Header layout and colours. The desktop layout applies only in Horizon's menu mode, so touch screens get the drawer menu instead of a broken mix. In drawer mode one of Horizon's two search icons is hidden, since with customer accounts off Horizon shows both. |
 | `blocks/_header-logo.liquid` | Text logo instead of an image |
 | `blocks/_header-menu.liquid` | Active state for menu links with a query string |
 | `snippets/search-modal.liquid` | Visible "Search the archive" label and the archive search styles |
