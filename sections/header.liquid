@@ -1485,6 +1485,14 @@
   #header-component .menu-drawer .menu-drawer__featured-content {
     display: none;
   }
+
+  /* Customer accounts are off, so Horizon never hides the regular search icon in drawer mode
+     and both search icons show side by side. Hide the regular one only when Horizon's drawer
+     copy exists, so search never disappears (the copy is skipped when search is set to "left") */
+  #header-component[data-menu-style='drawer']:has(.search-action--hidden-on-menu)
+    .search-action:not(.search-action--hidden-on-menu) {
+    display: none;
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
