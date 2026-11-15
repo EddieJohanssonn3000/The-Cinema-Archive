@@ -83,7 +83,7 @@ The project is a customised version of Shopify's **Horizon** theme, built as a f
 - Header with a text logo and a grid menu on desktop; touch screens get Shopify's drawer menu in the archive colours.
 - Favicon in the archive style, and arrows that stay text instead of turning into emoji on iPhone.
 
-**Responsive** layouts for mobile, tablet and desktop, tested at 390–440, 1024, 1280, 1440, 1920 and 2560 px, on a real iPhone and on the school projector (1920 × 1080).
+**Responsive** layouts for mobile, tablet and desktop, tested at 390–440, 768, 1024, 1280, 1440, 1920 and 2560 px, on a real iPhone and on the school projector (1920 × 1080).
 
 ## Tech stack
 
@@ -288,7 +288,7 @@ Checked for each feature before it was merged:
 - **Filters and search:** every combination of format and condition, sorting, "Clear filters", and search terms with quotes and apostrophes, clicked through in a headless Chrome
 - **Keyboard:** Tab and the arrow keys through the toolbar and the search suggestions, with a visible focus indicator
 - **Security:** search terms, filter values and sort values containing HTML and script tags, checked to make sure nothing is output unescaped
-- **Lighthouse:** Accessibility 100 on the Films page and 95 on the homepage
+- **Lighthouse** (desktop): Accessibility 95–100 on all main pages
 - `shopify theme check` (no errors)
 
 ## Known limitations
@@ -351,5 +351,4 @@ AI tools were used as a pair programmer and tutor during the project.
 - Photo in the homepage quote section: Jeremy Yap / Unsplash.
 - Film posters and director portraits belong to their respective rights holders and are used for educational purposes only.
 
-
-- Built by Eddie Johansson.
+Built by Eddie Johansson.
